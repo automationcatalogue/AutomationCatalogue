@@ -1,0 +1,8 @@
+{
+  browser: chrome,
+  chromeDriverExefilepath: 'C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe',
+  chromeDriverFilePath: 'C:\Anitha\AutomationCatalogue\Drivers\Chrome\chromedriver_win32_1\chromedriver.exe',
+  orangehrmURL: 'https://catalogautomate-trials7501.orangehrmlive.com/',
+  demoWebShop: 'http://demowebshop.tricentis.com/',
+  implicitTimeOut: "20"
+}
