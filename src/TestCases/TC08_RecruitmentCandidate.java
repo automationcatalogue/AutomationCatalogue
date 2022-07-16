@@ -113,6 +113,8 @@ public class TC08_RecruitmentCandidate {
             }
         }
 
+        System.out.println("Getting All Available window Handles");
+
         Set<String> allSessions=driver.getWindowHandles();
         for(String latestSession:allSessions){
             driver.switchTo().window(latestSession);
