@@ -17,7 +17,7 @@ import java.util.List;
 public class TC01_AddEmployee {
     public static void main(String[] args) throws Exception{
         //WebDriver Initialization
-        System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver=new ChromeDriver();
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
@@ -86,9 +86,10 @@ public class TC01_AddEmployee {
                 break;
             }
         }
-
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".select-wrapper.picker__select--month")));
         driver.findElement(By.cssSelector(".select-wrapper.picker__select--month")).click();
         System.out.println("Month drop-down is clicked");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li")));
         List<WebElement> elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
         for(WebElement element_month:elements_months){
             String actualMonth=element_month.getText();
@@ -119,8 +120,9 @@ public class TC01_AddEmployee {
         System.out.println("Next button clicked in the Personal Details page");
 
         //Employment Details page
+        wait.until(ExpectedConditions.presenceOfElementLocated((By.xpath("//label[text()='Work Shift']"))));
         WebElement element_RegionDropDown=driver.findElement(By.xpath("//label[text()='Region']//following-sibling::div[1]/button/div/div/div"));
-        js.executeScript("window.scrollIntoView(true);",element_RegionDropDown);
+        js.executeScript("arguments[0].scrollIntoView(true);",element_RegionDropDown);
         element_RegionDropDown.click();
         System.out.println("Region drop-down is clicked");
         String expectedRegion="Region-2";
@@ -130,6 +132,7 @@ public class TC01_AddEmployee {
             if(actualRegion.equalsIgnoreCase(expectedRegion)){
                 ele_region.click();
                 System.out.println("Region value is selected");
+                break;
             }
         }
 
@@ -143,11 +146,12 @@ public class TC01_AddEmployee {
             if(actualFTE.equalsIgnoreCase(expectedFTE)){
                 ele_fte.click();
                 System.out.println("FTE value is selected");
+                break;
             }
         }
-
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/button/div/div/div")));
         WebElement element_TemporaryDepartmentDropDown=driver.findElement(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/button/div/div/div"));
-        element_FTEDropDown.click();
+        element_TemporaryDepartmentDropDown.click();
         System.out.println("Temporary Department drop-down is clicked");
         String expectedTemporaryDepartment="Sub unit-3";
         List<WebElement> elements_temporaryDepartments=driver.findElements(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/div//ul/li/a/span"));
@@ -156,6 +160,7 @@ public class TC01_AddEmployee {
             if(actualTemporaryDepartment.equalsIgnoreCase(expectedTemporaryDepartment)){
                 ele_temporaryDepartment.click();
                 System.out.println("Temporary Department value is selected");
+                break;
             }
         }
 
@@ -172,16 +177,22 @@ public class TC01_AddEmployee {
         System.out.println("Employee Management link is clicked");
         driver.findElement(By.linkText("Employee List")).click();
         System.out.println("Click action is performed on Employee List");
+        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
 
         //Add Employee verification
         String completeName=firstName+" "+lastName;
         driver.findElement(By.xpath("//input[@id='employee_name_quick_filter_employee_list_value']")).sendKeys(completeName);
         System.out.println(completeName+" is entered as CompleteName in the Search box");
 
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='employee_name_quick_filter_employee_list_dropdown']//div[3]/span[1]")));
+
         driver.findElement(By.xpath("//div[@id='employee_name_quick_filter_employee_list_dropdown']//div[3]/span[1]")).click();
         System.out.println("First result is selected from a result drop-down");
-        driver.findElement(By.xpath("//i[text()='ohrm_search']")).click();
+
+        //driver.findElement(By.xpath("//i[text()='ohrm_search']")).click();
         System.out.println("click action is performed on Search button");
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Rows per page']")));
 
         String employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[2]")).getText();
         System.out.println("EmployeeId is :"+employeeId);
