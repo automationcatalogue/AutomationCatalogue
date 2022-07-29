@@ -3,21 +3,23 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import selenium_IndividualScripts.webDriverBasics.ExcelDemo;
+
 import java.io.FileInputStream;
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 
 public class TC01_AddEmployee {
     public static void main(String[] args) throws Exception{
         //WebDriver Initialization
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
         WebDriver driver=new ChromeDriver();
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
@@ -51,8 +53,8 @@ public class TC01_AddEmployee {
         driver.findElement(By.xpath("//i[text()='add']")).click();
         System.out.println("click action performed on Add Employee");
         //Add Employee
-        String firstName="Selenium";
-        String lastName="Automation";
+        String firstName="Automation";
+        String lastName="Catalogue";
         driver.findElement(By.xpath("//input[@id='first-name-box']")).sendKeys(firstName);
         System.out.println("FirstName is entered");
         driver.findElement(By.xpath("//input[@id='last-name-box']")).sendKeys(lastName);
@@ -179,6 +181,8 @@ public class TC01_AddEmployee {
         System.out.println("Click action is performed on Employee List");
         //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
 
+        driver.navigate().to("https://testcatalogue-trials7501.orangehrmlive.com/client/#/pim/employees");
+
         //Add Employee verification
         String completeName=firstName+" "+lastName;
         driver.findElement(By.xpath("//input[@id='employee_name_quick_filter_employee_list_value']")).sendKeys(completeName);
@@ -190,12 +194,43 @@ public class TC01_AddEmployee {
         System.out.println("First result is selected from a result drop-down");
 
         //driver.findElement(By.xpath("//i[text()='ohrm_search']")).click();
-        System.out.println("click action is performed on Search button");
+        //System.out.println("click action is performed on Search button");
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Rows per page']")));
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Rows per page']")));
 
-        String employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[2]")).getText();
-        System.out.println("EmployeeId is :"+employeeId);
+        Wait<WebDriver> wait_EmployeeName= new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(20))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(NoSuchElementException.class);
+
+        wait_EmployeeName.until(new Function<WebDriver,Boolean>() {
+            public Boolean apply(WebDriver driver){
+                int numberOfRecords=driver.findElements(By.xpath("//table[@id='employeeListTable']//tbody/tr")).size();
+                if(numberOfRecords==1){
+                    System.out.println("Only one record is present");
+                    return true;
+                }else{
+                    System.out.println("More than one record is present / Data is not populated");
+                    return false;
+                }
+            }
+        });
+
+
+        for(int iCount=1;iCount<=3;iCount++){
+            try{
+                String employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[2]")).getText();
+                System.out.println("EmployeeId is :"+employeeId);
+                break;
+            }catch (StaleElementReferenceException se){
+                Thread.sleep(1000);
+                System.out.println("Stale Element Reference Exception is occurred and retrying another time");
+            }catch (Exception e){
+                System.out.println("Exception occurred!!!"+e.getMessage());
+                e.printStackTrace();
+                throw new Exception();
+            }
+        }
 
         String actualCompleteName=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[3]")).getText();
         if(completeName.equalsIgnoreCase(actualCompleteName)){
@@ -215,10 +250,9 @@ public class TC01_AddEmployee {
 
         System.out.println("Add Employee is successful");
 
-        //driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-        //System.out.println("Logged out from the OrangeHRM application");
+        driver.findElement(By.xpath("//span[text()='Log Out']")).click();System.out.println("Logged out from the OrangeHRM application");
 
-        //driver.quit();
+        driver.quit();
     }
 
 }
