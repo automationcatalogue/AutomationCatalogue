@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.time.Duration;
 import java.util.List;
-public class TC03_DemoWebShopPurchaseCOD {
+public class TC06_DemoWebShopPurchaseCOD {
     public static void main(String[] args) {
         System.setProperty("webdriver.chrome.driver",
                 "C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32\\chromedriver.exe");
