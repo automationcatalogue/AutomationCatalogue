@@ -21,6 +21,7 @@ import java.util.function.Function;
 
 public class TC02_AddUser {
     public static void main(String[] args) throws Exception {
+
         System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
         WebDriver driver=new ChromeDriver();
         String path=System.getProperty("user.dir");
@@ -64,7 +65,7 @@ public class TC02_AddUser {
         Thread.sleep(2000);
         driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(Keys.TAB);
 
-        String userName="odishrmtestc";
+        String userName="odishrmtestd";
         driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(userName);
         System.out.println("User Name is entered");
 
