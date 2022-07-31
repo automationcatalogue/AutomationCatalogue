@@ -8,6 +8,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.yaml.snakeyaml.Yaml;
 
@@ -15,161 +17,139 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.function.Function;
 
 public class TC02_AddUser {
     public static void main(String[] args) throws Exception {
-        String projectPath=System.getProperty("user.dir");
-        System.out.println("Project Path is :"+projectPath);
-        System.out.println("hello");
-
-        Yaml yaml_Config = new Yaml();
-        FileInputStream fis_Config = new FileInputStream(projectPath+ Constants.yaml_filePath);
-        HashMap<String, String> map_config= (HashMap<String, String>) yaml_Config.load(fis_Config);
-
-        String driverPath= map_config.get("chromeDriverExefilepath");
-        System.out.println("ChromeDriver Path is :"+driverPath);
-
-        //Initialize WebDriver
-        System.setProperty("webdriver.chrome.driver",driverPath);
-        WebDriver driver = new ChromeDriver();
-
+        System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        WebDriver driver=new ChromeDriver();
+        String path=System.getProperty("user.dir");
+        System.out.println("Project Path is :"+path);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
-        //driver.get("https://automatecatalog-trials7401.orangehrmlive.com/auth/login");
-        driver.get("https://testcatalogue-trials7501.orangehrmlive.com/");
+
+        driver.get("https://testautomation9-trials7501.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
-        String title=driver.getTitle();
-        System.out.println("Title is " +title);
-        String path=System.getProperty("user.dir");
-        System.out.println(path);
-        FileInputStream fis=new FileInputStream(path+"\\TestData\\AddEmployee.xlsx");
-        XSSFWorkbook wbk=new XSSFWorkbook(fis);
-        XSSFSheet sh=wbk.getSheet("EmpDetails");
-        XSSFRow row=sh.getRow(1);
-        int rowCount=sh.getLastRowNum();
-        System.out.println("total number of rows : "+rowCount);
-
-        XSSFCell cell=row.getCell(1);
-        String username=cell.getStringCellValue();
-        System.out.println("UserName from xl file is : "+username);
-
-        cell=row.getCell(2);
-        String password=cell.getStringCellValue();
-        System.out.println("Password from xl file is : "+password);
-
-        cell=row.getCell(3);
-        String firstname=cell.getStringCellValue();
-        System.out.println("firstname from xl file is : "+firstname);
-
-        cell=row.getCell(4);
-        String lastname=cell.getStringCellValue();
-        System.out.println("lastname from xl file is : "+lastname);
-
-        cell=row.getCell(5);
-        String location=cell.getStringCellValue();
-        System.out.println("location from xl file is : "+location);
-
-        cell=row.getCell(8);
-        String empUserName=cell.getStringCellValue();
-        System.out.println("Given emp username is : "+empUserName);
-
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys(username);
+        //OrangeHRM Login
+        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
         System.out.println("Admin is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys(password);
+        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
         System.out.println("Admin@123 is Entered as password");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         System.out.println("Login button is clicked");
-        boolean isDisplayed=driver.findElement(By.linkText("oxd_home_menu")).isDisplayed();
-        if(isDisplayed){
-            System.out.println("Dashboard/Home  is displayed");
-        }else {
-           throw new Exception();
+
+        //Login verification
+        boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
+        if(isLoginSuccessful){
+            System.out.println("Login is successful");
+        }else{
+            System.out.println("Login is not successful");
+            throw new Exception();
         }
-        //driver.findElement(By.xpath("//span[text()='Admin']")).click();
-        System.out.println("clicked on admin in menu");
-        driver.findElement(By.xpath("//a[@id='sidebar-toggle']")).click();
-        System.out.println("Click action is performed on side toggle button");
-        driver.findElement(By.xpath("(//a[@id='menu_item_81'])[2]")).click();
-        System.out.println("clicked on User Management");
-        driver.findElement(By.linkText("Users")).click();
-        System.out.println("clicked on users under User Management");
+
+
+        driver.findElement(By.xpath("(//span[text()='HR Administration'])[1]")).click();
+        System.out.println("HR Administration link is clicked");
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@class='highlight bordered']//tbody//tr[2]//td[@class='edit_item tooltipped']")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='systemUserDiv']//table//tbody//tr[1]")));
 
         driver.findElement(By.xpath("//i[text()='add']")).click();
         System.out.println(" + Add user icon clicked ");
+
+        //Add User
+        driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys("1061");
+        System.out.println("Employee ID is entered as EmployeeName");
         Thread.sleep(2000);
+        driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(Keys.TAB);
 
-        driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(firstname+" "+lastname);
-        driver.findElement(By.xpath("//div[@class='angucomplete-wrapper']/div[3]")).click();
-        System.out.println("First name in the drop down is selected");
-        //driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(Keys.TAB);
-        System.out.println( firstname+" "+lastname +"is Entered as Employee Name");
+        String userName="odishrmtestc";
+        driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(userName);
+        System.out.println("User Name is entered");
 
-        driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(empUserName+"9");
-        System.out.println(empUserName+" is entered as User Name");
-
-        driver.findElement(By.xpath("(//i[text()='arrow_drop_down'])[1]")).click();
-        System.out.println("Clicked on Ess Drop down");
-        driver.findElement(By.xpath("(//a[@class='dropdown-item active selected'])[1]")).click();
-        System.out.println("Default ESS is selected in ESS drop-down");
-       // driver.findElement(By.xpath("(//i[text()='arrow_drop_down'])[2]")).click();
-        System.out.println("clicked on Supervisor Role Drop-down");
-       // driver.findElement(By.xpath("(//a[@class='dropdown-item active selected'])[1]")).click();
-        System.out.println("Default Supervisor is Selected under Supervisor Role");
         driver.findElement(By.xpath("//input[@placeholder='Enter Password']")).sendKeys("Admin@123");
         System.out.println("Admin@123 is Entered as Password in Password field");
         driver.findElement(By.xpath("//input[@placeholder='Confirm Password']")).sendKeys("Admin@123");
         System.out.println("Admin@123 is entered as Confirm Password");
-        Thread.sleep(2000);
+
         driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
         System.out.println("clicked on save button to create User");
-        wait=new WebDriverWait(driver,Duration.ofSeconds(20));
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='oxd_filter']")));
-        //wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//i[text()='oxd_filter']")));
-        System.out.println("waiting for filter element to be loaded");
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//i[text()='oxd_filter']")).click();
-        System.out.println("clicked on Ohrm filter in the users menu");
-        //wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[@for='employee_uname_filter']")));
 
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Search']")));
-        //driver.findElement(By.xpath("//label[@for='employee_uname_filter']")).sendKeys("DanielDh");
-        //driver.findElement(By.xpath("(//label[@for='employee_uname_filter'])[2]")).click();
-        String reqUser="DaniDp";
-        driver.findElement(By.xpath("//form[@id='frmSystemUserSearch']/div//input[@id='systemuser_uname_filter']")).sendKeys(empUserName);
-        driver.findElement(By.xpath("//form[@id='frmSystemUserSearch']/div//input[@id='systemuser_uname_filter']")).sendKeys(Keys.TAB);
-        driver.findElement(By.xpath("//input[@id='employee_name_filter_value']")).sendKeys(empUserName);
-        driver.findElement(By.xpath("//input[@id='employee_name_filter_value']")).sendKeys(Keys.TAB);
-        //driver.findElement(By.xpath("(//div[@id='employee_name_filter_dropdown'])[2]/div[3]/span/span")).click();
-        System.out.println(empUserName+"is Entered as Employee Name");
+        Thread.sleep(4000);
+
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        WebElement element_filter=driver.findElement(By.xpath("//i[text()='oxd_filter']"));
+        js.executeScript("arguments[0].click()",element_filter);
+        System.out.println("clicked on Ohrm filter in the users menu");
+
+        driver.findElement(By.xpath("//form[@id='frmSystemUserSearch']/div//input[@id='systemuser_uname_filter']")).sendKeys(userName);
+        System.out.println(userName+" is entered as UserName in filter Users");
+
         driver.findElement(By.xpath("//a[text()='Search']")).click();
         System.out.println("Clicked on Search Button");
-        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        Thread.sleep(1000);
 
-        TakesScreenshot ts=(TakesScreenshot)driver;
-        File src=ts.getScreenshotAs(OutputType.FILE);
-        File destination=new File(path+"\\screenshots\\"+empUserName+"_Verify_Timestamp.png");
-        FileUtils.copyFile(src,destination);
-        System.out.println("Screenshot captured for : "+empUserName+"_Verify_Timestamp.png");
+        //Verification of User
+        Wait<WebDriver> wait_UserName= new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(20))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(NoSuchElementException.class);
+
+        wait_UserName.until(new Function<WebDriver,Boolean>() {
+            public Boolean apply(WebDriver driver){
+                int numberOfRecords=driver.findElements(By.xpath("//div[@id='systemUserDiv']//table//tbody/tr")).size();
+                if(numberOfRecords==1){
+                    System.out.println("Only one record is present");
+                    return true;
+                }else{
+                    System.out.println("More than one record is present / Data is not populated");
+                    return false;
+                }
+            }
+        });
+
+
+        for(int iCount=1;iCount<=3;iCount++){
+            try{
+                String actualuserName=driver.findElement(By.xpath("//div[@id='systemUserDiv']//table//tbody/tr[1]/td[2]")).getText();
+                System.out.println("User Name from the filtered users is :"+actualuserName);
+                break;
+            }catch (StaleElementReferenceException se){
+                Thread.sleep(1000);
+                System.out.println("Stale Element Reference Exception is occurred and retrying another time");
+            }catch (Exception e){
+                System.out.println("Exception occurred!!!"+e.getMessage());
+                e.printStackTrace();
+                throw new Exception();
+            }
+        }
+
+        String employeeName=driver.findElement(By.xpath("//div[@id='systemUserDiv']//table//tbody/tr[1]/td[4]")).getText();
+        System.out.println("Employee Name is :"+employeeName);
 
         driver.findElement(By.xpath("//span[text()='Log Out']")).click();
 
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys(empUserName);
-        System.out.println(empUserName+" is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys(password);
-        System.out.println(password+"is emtered as password");
+        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys(userName);
+        System.out.println(userName+" is entered as username");
+        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
+        System.out.println("Admin@123 is entered as password");
 
         driver.findElement(By.xpath("//button[text()='Login']")).click();
         System.out.println("Click action is performed on login button with new user");
 
-        TakesScreenshot ts1=(TakesScreenshot)driver;
-        File src1=ts1.getScreenshotAs(OutputType.FILE);
-        File destination1=new File(path+"\\screenshots\\"+empUserName+"_Login_Timestamp.png");
-        FileUtils.copyFile(src1,destination1);
-        System.out.println("Screenshot captured for : "+empUserName+"_Login_TimeStamp.png");
+        String actualEmployeeName=driver.findElement(By.xpath("//div[@id='sidebar-profile-picture']/a")).getText();
+        System.out.println(actualEmployeeName+ " is logged into the application");
+
+        if(actualEmployeeName.equalsIgnoreCase(employeeName)){
+            System.out.println("Add User Verification is successful");
+        }else{
+            System.out.println("Add User Verification is not successful");
+            throw new Exception();
+        }
+
+        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+
+        //driver.quit();
 
     }
 }
