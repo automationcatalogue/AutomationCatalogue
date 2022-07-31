@@ -25,6 +25,7 @@ public class TC02_AddUser {
         Yaml yaml_Config = new Yaml();
         FileInputStream fis_Config = new FileInputStream(projectPath+ Constants.yaml_filePath);
         HashMap<String, String> map_config= (HashMap<String, String>) yaml_Config.load(fis_Config);
+        System.out.println("Changes in add user");
 
         String driverPath= map_config.get("chromeDriverExefilepath");
         System.out.println("ChromeDriver Path is :"+driverPath);
@@ -36,13 +37,14 @@ public class TC02_AddUser {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
-        //driver.get("https://automatecatalog-trials7401.orangehrmlive.com/auth/login");
+        System.out.println("Changes in add user");
         driver.get("https://testcatalogue-trials7501.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
         String title=driver.getTitle();
         System.out.println("Title is " +title);
         String path=System.getProperty("user.dir");
         System.out.println(path);
+        Thread.sleep(1000);
         FileInputStream fis=new FileInputStream(path+"\\TestData\\AddEmployee.xlsx");
         XSSFWorkbook wbk=new XSSFWorkbook(fis);
         XSSFSheet sh=wbk.getSheet("EmpDetails");
@@ -134,9 +136,7 @@ public class TC02_AddUser {
         System.out.println("clicked on Ohrm filter in the users menu");
         //wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[@for='employee_uname_filter']")));
 
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Search']")));
-        //driver.findElement(By.xpath("//label[@for='employee_uname_filter']")).sendKeys("DanielDh");
-        //driver.findElement(By.xpath("(//label[@for='employee_uname_filter'])[2]")).click();
+
         String reqUser="DaniDp";
         driver.findElement(By.xpath("//form[@id='frmSystemUserSearch']/div//input[@id='systemuser_uname_filter']")).sendKeys(empUserName);
         driver.findElement(By.xpath("//form[@id='frmSystemUserSearch']/div//input[@id='systemuser_uname_filter']")).sendKeys(Keys.TAB);
