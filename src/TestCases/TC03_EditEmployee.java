@@ -19,7 +19,8 @@ import java.util.function.Function;
 
 public class TC03_EditEmployee {
     public static void main(String[] args) throws Exception {
-        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
@@ -254,10 +255,20 @@ public class TC03_EditEmployee {
         System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
 
         //Click on Emergency Contacts
+        driver.findElement(By.xpath("//a[text()='More ']")).click();
+        System.out.println("Clicked on More drop down");
+        driver.findElement(By.xpath("//a[text()=' Contact Details ']")).click();
+        System.out.println("Cliked on Contact Details in the More drop down");
+        //Enter the MobileNumber
+        driver.findElement(By.xpath("//input[@id='emp_mobile']")).clear();
+        driver.findElement(By.xpath("//input[@id='emp_mobile']")).sendKeys("90876536363");
+        System.out.println("Mobile number changed ");
+        driver.findElement(By.xpath("//button[text()='Save']")).click();
+        System.out.println("Clicked on save button");
         //Click on +Add button
         //Click Name and Enter some Random Data
         //Enter some relationship
-        //Enter the MobileNumber
+
         //Click on Save
 
         //Click on Home button
@@ -267,6 +278,9 @@ public class TC03_EditEmployee {
         //Click on EmployeeList
         driver.findElement(By.linkText("Employee List")).click();
         System.out.println("click action performed on Employee List link");
+
+        driver.navigate().to("https://testautomation9-trials7501.orangehrmlive.com/client/#/pim/employees");
+
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")));
 
         //Click on Filter
