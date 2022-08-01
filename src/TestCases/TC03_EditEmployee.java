@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TC03_EditEmployee {
     public static void main(String[] args) throws Exception {
-        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
@@ -69,7 +69,7 @@ public class TC03_EditEmployee {
         }
 
         //Updating Nationality
-        String expectedNationality = "Spanish";
+        String expectedNationality = "Indonesian";
         driver.findElement(By.xpath("//div[@id='nation_code_inputfileddiv']/div/input")).click();
         System.out.println("Nationality drop-down is clicked");
         List<WebElement> elements_Nationalities = driver.findElements(By.xpath("//div[@id='nation_code_inputfileddiv']/div/ul/li/span"));
@@ -79,6 +79,7 @@ public class TC03_EditEmployee {
             if (actualNationality.equals(expectedNationality)) {
                 ele_nationality.click();
                 System.out.println(actualNationality + " is selected for the Nationality drop-down");
+                break;
             }
         }
 
@@ -86,11 +87,35 @@ public class TC03_EditEmployee {
         System.out.println("Click action is performed on save button");
 
         //Click on Job
+        driver.findElement(By.xpath("//a[@ui-sref='pim.employees.profile.job']")).click();
+        System.out.println("Click action performed on Job tab ");
+
         //Update the Location information
+        String LocationExpected="Fiserv_Location_2";
+        driver.findElement(By.xpath("//label[@for='location_id']/../div/button")).click();
+        System.out.println("Click action performed on Location drop down");
+        List<WebElement> LocationElements=driver.findElements(By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span"));
+        for(WebElement LocationElement:LocationElements){
+            String LocationActual=LocationElement.getText();
+            if(LocationActual.equalsIgnoreCase(LocationExpected)){
+                LocationElement.click();
+                System.out.println(LocationActual+" is selected for Location");
+                break;
+            }
+        }
 
         //Click on Salary
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@ui-sref='pim.employees.profile.salary']")));
+        driver.findElement(By.xpath("//a[@ui-sref='pim.employees.profile.salary']")).click();
+        System.out.println("Click action performed on Salary tab");
+
         //Read the Data for Cost to Company
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='summary-card-column summary-card-right'][1]")));
+        String CostToCompany=driver.findElement(By.xpath("//div[@class='summary-card-column summary-card-right'][1]")).getText();
+        System.out.println(CostToCompany + " : is Cost to Company");
+
         //Change the Cost of Living Allowance to 9000.00
+        
         //And Validate the GrossPay  --> It should be sum of Annual Basic Pay + Car Allowance + Cost of Living Allowance + Monthly
         //Print the GrossPay
 
