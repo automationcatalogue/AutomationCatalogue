@@ -7,16 +7,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 
 public class TC03_EditEmployee {
     public static void main(String[] args) throws Exception {
-        System.setProperty("webdriver.chrome.driver", "C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
@@ -48,6 +51,8 @@ public class TC03_EditEmployee {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")));
+        String employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")).getText();
+        System.out.println("Employee Id is :"+employeeId);
 
         driver.findElement(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")).click();
         System.out.println("Clicked on First Employee");
@@ -91,41 +96,162 @@ public class TC03_EditEmployee {
         System.out.println("Click action performed on Job tab ");
 
         //Update the Location information
-        String LocationExpected="Fiserv_Location_2";
+        String expectedLocation="Jamaica training center";
         driver.findElement(By.xpath("//label[@for='location_id']/../div/button")).click();
         System.out.println("Click action performed on Location drop down");
-        List<WebElement> LocationElements=driver.findElements(By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span"));
-        for(WebElement LocationElement:LocationElements){
-            String LocationActual=LocationElement.getText();
-            if(LocationActual.equalsIgnoreCase(LocationExpected)){
-                LocationElement.click();
-                System.out.println(LocationActual+" is selected for Location");
+        List<WebElement> elements_locations=driver.findElements(By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span"));
+        for(WebElement ele_location:elements_locations){
+            String actualLocation=ele_location.getText();
+            if(actualLocation.equalsIgnoreCase(expectedLocation)){
+                ele_location.click();
+                System.out.println(actualLocation+" is selected for Location");
                 break;
             }
         }
 
+        driver.findElement(By.xpath("//a[text()='Save']")).click();
+        System.out.println("Save button is clicked in the Jobs page");
+
+        driver.findElement(By.xpath("//label[text()='Event']//following-sibling::div[1]/button")).click();
+        System.out.println("Event drop-down is clicked");
+
+        String expectedEvent="First Time Addition";
+        List<WebElement> elements_Events=driver.findElements(By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span"));
+        for(WebElement ele_event:elements_Events){
+            String actualEvent=ele_event.getText();
+            if(actualEvent.equalsIgnoreCase(expectedEvent)){
+                ele_event.click();
+                System.out.println(actualEvent+ " is selected from the Event drop-down");
+                break;
+            }
+        }
+
+        driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
+        System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
+
         //Click on Salary
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@ui-sref='pim.employees.profile.salary']")));
         driver.findElement(By.xpath("//a[@ui-sref='pim.employees.profile.salary']")).click();
         System.out.println("Click action performed on Salary tab");
 
         //Read the Data for Cost to Company
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='summary-card-column summary-card-right'][1]")));
-        String CostToCompany=driver.findElement(By.xpath("//div[@class='summary-card-column summary-card-right'][1]")).getText();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='summary-card-column summary-card-right'])[1]")));
+        String CostToCompany=driver.findElement(By.xpath("(//div[@class='summary-card-column summary-card-right'])[1]")).getText();
         System.out.println(CostToCompany + " : is Cost to Company");
 
         //Change the Cost of Living Allowance to 9000.00
+        driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[2]//input")).clear();
+        driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[2]//input")).sendKeys("9000.00");
+        System.out.println("Updated the Cost of Living Allowance is 9000.00");
         
         //And Validate the GrossPay  --> It should be sum of Annual Basic Pay + Car Allowance + Cost of Living Allowance + Monthly
+        String annualBasicPay=driver.findElement(By.xpath("//span[text()='Annual Basic Payment']/../../td[3]/span")).getText();
+        annualBasicPay=annualBasicPay.substring(1);
+        annualBasicPay=annualBasicPay.replaceAll(",","");
+        double dAnnualBasicPay=Double.parseDouble(annualBasicPay);
+        System.out.println("Annual Basic pay value is :"+dAnnualBasicPay);
+
+        String carAllowance=driver.findElement(By.xpath("//span[text()='Car Allowance']/../../td[3]/span")).getText();
+        double dCarAllowance=0.00;
+        if(!carAllowance.isEmpty()){
+            carAllowance=carAllowance.substring(1);
+            carAllowance=carAllowance.replaceAll(",","");
+            dCarAllowance=Double.parseDouble(carAllowance);
+        }
+        System.out.println("Car Allowance value is :"+dCarAllowance);
+
+        String costOfLivingAllowance=driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[3]/span")).getText();
+        costOfLivingAllowance=costOfLivingAllowance.substring(1);
+        costOfLivingAllowance=costOfLivingAllowance.replaceAll(",","");
+        double dCostOfLivingAllowance=Double.parseDouble(costOfLivingAllowance);
+        System.out.println("Cost of Living Allowance value is :"+dCostOfLivingAllowance);
+
+        String monthly=driver.findElement(By.xpath("//span[text()='Monthly']/../../td[3]/span")).getText();
+        double dMonthly=0.00;
+        if(!monthly.isEmpty()){
+            monthly=monthly.substring(1);
+            monthly=monthly.replaceAll(",","");
+            dMonthly=Double.parseDouble(monthly);
+        }
+        System.out.println("Monthly value is :"+dMonthly);
+
         //Print the GrossPay
+        String grossPay=driver.findElement(By.xpath("//span[text()='Gross Pay']/../..//following-sibling::td")).getText();
+        grossPay=grossPay.substring(1);
+        grossPay=grossPay.replaceAll(",","");
+        double dGrossPay=Double.parseDouble(grossPay);
+
+        double actualGrossPay=dAnnualBasicPay+dCarAllowance+dCostOfLivingAllowance+dMonthly;
+        if(actualGrossPay==dGrossPay){
+            System.out.println("Gross Pay is updated correctly");
+        }else{
+            System.out.println("Gross Pay is not updated correctly");
+            throw new Exception();
+        }
 
         //Change the EPF to 9%
+        driver.findElement(By.xpath("//span[text()='EPF']/../../td[2]//div/input")).clear();
+        driver.findElement(By.xpath("//span[text()='EPF']/../../td[2]//div/input")).sendKeys("9.00");
+        System.out.println("EPF updated to 9.00%");
+
+
         //Validate the EPF value --> It should be Annual Basic Pay * EPF%
+        String epf=driver.findElement(By.xpath("//span[text()='EPF']/../../td[3]/span")).getText();
+        epf=epf.substring(1);
+        epf=epf.replaceAll(",","");
+        double dEPF=Double.parseDouble(epf);
+
+        double actualEPF=(dAnnualBasicPay*0.09);
+        if(actualEPF==dEPF){
+            System.out.println("EPF updated correctly");
+        }else{
+            System.out.println("EPT not updated correctly");
+            throw new Exception();
+        }
+
         //Add validate the Total Deductions --> It should be sum of EPF + Pension Fund
+        String pensionFund=driver.findElement(By.xpath("//span[text()='Pension Fund']/../../td[3]/span")).getText();
+        double dPensionFund=0.00;
+        if(!pensionFund.isEmpty()){
+            pensionFund=pensionFund.substring(1);
+            pensionFund=pensionFund.replaceAll(",","");
+            dPensionFund=Double.parseDouble(pensionFund);
+        }
+        System.out.println("Pension Fund Value is :"+dPensionFund);
+
+        double actualTotalDeductions=dEPF+dPensionFund;
+        String totalDeductions=driver.findElement(By.xpath("//span[text()='Total Deductions']/../..//following-sibling::td[1]")).getText();
+        totalDeductions=totalDeductions.substring(1);
+        totalDeductions=totalDeductions.replaceAll(",","");
+        double dTotalDeductions=Double.parseDouble(totalDeductions);
+
+        if(dTotalDeductions==actualTotalDeductions){
+            System.out.println("Total Deductions updated correctly");
+        }else{
+            System.out.println("Total Deductions not updated correctly");
+            throw new Exception();
+        }
+
         //Click on Save button
+        driver.findElement(By.xpath("//a[text()='Save']")).click();
+        System.out.println("Click action is performed on Save button");
 
         //In Salary Confirm Changes window, change the Event to Promoted
-        //Click on Confirm button
+        driver.findElement(By.xpath("//label[text()='Event']//following-sibling::div[1]/button")).click();
+        System.out.println("Event drop-down is clicked");
+
+        expectedEvent="First Time Addition";
+        List<WebElement> elements_Events_Jobs=driver.findElements(By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span"));
+        for(WebElement ele_event:elements_Events_Jobs){
+            String actualEvent=ele_event.getText();
+            if(actualEvent.equalsIgnoreCase(expectedEvent)){
+                ele_event.click();
+                System.out.println(actualEvent+ " is selected from the Event drop-down");
+                break;
+            }
+        }
+
+        driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
+        System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
 
         //Click on Emergency Contacts
         //Click on +Add button
@@ -135,20 +261,84 @@ public class TC03_EditEmployee {
         //Click on Save
 
         //Click on Home button
+        driver.findElement(By.xpath("//a[@data-automation-id='menu_home']")).click();
+        System.out.println("Home button is clicked");
+
         //Click on EmployeeList
+        driver.findElement(By.linkText("Employee List")).click();
+        System.out.println("click action performed on Employee List link");
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")));
+
         //Click on Filter
+        driver.findElement(By.xpath("//li[@data-tooltip='Filter']")).click();
+        System.out.println("Filter link is clicked");
+
         //Search with EmployeeId
+        driver.findElement(By.xpath("//input[@id='emp_search_mdl_employee_id_filter']")).sendKeys(employeeId);
+        System.out.println("Filtering with Employee ID "+employeeId);
+
+        driver.findElement(By.xpath("//a[text()='Search']")).click();
+        System.out.println("Click action is performed on Search button");
+
+
+        Wait<WebDriver> wait_EmployeeName= new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(20))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(NoSuchElementException.class);
+
+        wait_EmployeeName.until(new Function<WebDriver,Boolean>() {
+            public Boolean apply(WebDriver driver){
+                int numberOfRecords=driver.findElements(By.xpath("//table[@id='employeeListTable']//tbody/tr")).size();
+                if(numberOfRecords==1){
+                    System.out.println("Only one record is present");
+                    return true;
+                }else{
+                    System.out.println("More than one record is present / Data is not populated");
+                    return false;
+                }
+            }
+        });
+
+        for(int iCount=1;iCount<=3;iCount++){
+            try{
+                employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[2]")).getText();
+                System.out.println("EmployeeId is :"+employeeId);
+                break;
+            }catch (StaleElementReferenceException se){
+                Thread.sleep(1000);
+                System.out.println("Stale Element Reference Exception is occurred and retrying another time");
+            }catch (Exception e){
+                System.out.println("Exception occurred!!!"+e.getMessage());
+                e.printStackTrace();
+                throw new Exception();
+            }
+        }
+
+
         //Verify Updated EmployeeName
+        String actualEmployeeName=driver.findElement(By.xpath("//table[@id='employeeListTable']/tbody/tr[1]/td[3]")).getText();
+        if(actualEmployeeName.contains(newLastname)){
+            System.out.println("Employee Name updated correctly");
+        }else{
+            System.out.println("Employee Name not updated correctly");
+            throw new Exception();
+        }
+
         //Verify Updated Location
+        String actualLocation=driver.findElement(By.xpath("//table[@id='employeeListTable']/tbody/tr[1]/td[8]")).getText();
+        if(actualLocation.equalsIgnoreCase(expectedLocation)){
+            System.out.println("Location is updated correctly");
+        }else{
+            System.out.println("Location is not updated correctly");
+            throw new Exception();
+        }
 
-        //Logout
-        //close the browser
+        System.out.println("Edit Employee is successful");
 
+        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+        System.out.println("Logged out from the OrangeHRM application");
 
-
-
-
-
+        driver.quit();
 
     }
 
