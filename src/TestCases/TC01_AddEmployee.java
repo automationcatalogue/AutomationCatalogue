@@ -250,7 +250,8 @@ public class TC01_AddEmployee {
 
         System.out.println("Add Employee is successful");
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();System.out.println("Logged out from the OrangeHRM application");
+        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+        System.out.println("Logged out from the OrangeHRM application");
 
         driver.quit();
     }
