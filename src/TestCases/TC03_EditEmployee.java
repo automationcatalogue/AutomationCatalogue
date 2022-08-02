@@ -265,11 +265,6 @@ public class TC03_EditEmployee {
         System.out.println("Mobile number changed ");
         driver.findElement(By.xpath("//button[text()='Save']")).click();
         System.out.println("Clicked on save button");
-        //Click on +Add button
-        //Click Name and Enter some Random Data
-        //Enter some relationship
-
-        //Click on Save
 
         //Click on Home button
         driver.findElement(By.xpath("//a[@data-automation-id='menu_home']")).click();
@@ -349,10 +344,10 @@ public class TC03_EditEmployee {
 
         System.out.println("Edit Employee is successful");
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+        //driver.findElement(By.xpath("//span[text()='Log Out']")).click();
         System.out.println("Logged out from the OrangeHRM application");
 
-        driver.quit();
+        //driver.quit();
 
     }
 
