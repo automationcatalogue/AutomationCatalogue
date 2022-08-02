@@ -7,26 +7,39 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
-public class TC07_ApplyLeave {
-    public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver=new ChromeDriver();
+public class TC04_ApplyLeave {
+    public static void main(String[] args) throws Exception{
+        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        String path = System.getProperty("user.dir");
+        System.out.println("Project Path is :" + path);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
-        driver.get("https://testcatalogue-trials7501.orangehrmlive.com/");
-        System.out.println("OrangeHRM url loaded");
-        String title=driver.getTitle();
-        System.out.println("Title of the web page is : "+title );
 
+        driver.get("https://testautomation9-trials7501.orangehrmlive.com/");
+        System.out.println("OrangeHRM url loaded");
+        //OrangeHRM Login
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
         System.out.println("Admin is entered as username");
         driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
         System.out.println("Admin@123 is Entered as password");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         System.out.println("Login button is clicked");
-        driver.findElement(By.xpath("//span[text()='Leave']")).click();
+
+        //Login verification
+        boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
+        if (isLoginSuccessful) {
+            System.out.println("Login is successful");
+        } else {
+            System.out.println("Login is not successful");
+            throw new Exception();
+        }
+
+        driver.findElement(By.xpath("(//span[text()='Leave'])[1]")).click();
         System.out.println("Click action is performed on Leave menu");
+
         driver.findElement(By.xpath("//a[@data-automation-id='menu_leave_applyLeave']")).click();
         System.out.println("Click action is performed on Apply under leave menu");
         driver.findElement(By.xpath("//div[@class='select-wrapper initialized']")).click();

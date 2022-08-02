@@ -19,8 +19,8 @@ import java.util.function.Function;
 
 public class TC03_EditEmployee {
     public static void main(String[] args) throws Exception {
-        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
@@ -146,46 +146,70 @@ public class TC03_EditEmployee {
         
         //And Validate the GrossPay  --> It should be sum of Annual Basic Pay + Car Allowance + Cost of Living Allowance + Monthly
         String annualBasicPay=driver.findElement(By.xpath("//span[text()='Annual Basic Payment']/../../td[3]/span")).getText();
-        annualBasicPay=annualBasicPay.substring(1);
+        double dAnnualBasicPay=0.00;
         annualBasicPay=annualBasicPay.replaceAll(",","");
-        double dAnnualBasicPay=Double.parseDouble(annualBasicPay);
+        try{
+            dAnnualBasicPay=Double.parseDouble(annualBasicPay);
+        }catch(NumberFormatException ne){
+            annualBasicPay=annualBasicPay.substring(1);
+            dAnnualBasicPay=Double.parseDouble(annualBasicPay);
+        }
         System.out.println("Annual Basic pay value is :"+dAnnualBasicPay);
 
         String carAllowance=driver.findElement(By.xpath("//span[text()='Car Allowance']/../../td[3]/span")).getText();
         double dCarAllowance=0.00;
         if(!carAllowance.isEmpty()){
-            carAllowance=carAllowance.substring(1);
             carAllowance=carAllowance.replaceAll(",","");
-            dCarAllowance=Double.parseDouble(carAllowance);
+            try{
+                dCarAllowance=Double.parseDouble(carAllowance);
+            }catch(NumberFormatException ne){
+                carAllowance=carAllowance.substring(1);
+                dCarAllowance=Double.parseDouble(carAllowance);
+            }
         }
         System.out.println("Car Allowance value is :"+dCarAllowance);
 
         String costOfLivingAllowance=driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[3]/span")).getText();
-        costOfLivingAllowance=costOfLivingAllowance.substring(1);
         costOfLivingAllowance=costOfLivingAllowance.replaceAll(",","");
-        double dCostOfLivingAllowance=Double.parseDouble(costOfLivingAllowance);
+        double dCostOfLivingAllowance=0.00;
+        try{
+            dCostOfLivingAllowance=Double.parseDouble(costOfLivingAllowance);
+        }catch(NumberFormatException ne){
+            costOfLivingAllowance=costOfLivingAllowance.substring(1);
+            dCostOfLivingAllowance=Double.parseDouble(costOfLivingAllowance);
+        }
         System.out.println("Cost of Living Allowance value is :"+dCostOfLivingAllowance);
 
         String monthly=driver.findElement(By.xpath("//span[text()='Monthly']/../../td[3]/span")).getText();
         double dMonthly=0.00;
         if(!monthly.isEmpty()){
-            monthly=monthly.substring(1);
             monthly=monthly.replaceAll(",","");
-            dMonthly=Double.parseDouble(monthly);
+            try{
+                dMonthly=Double.parseDouble(monthly);
+            }catch(NumberFormatException ne){
+                monthly=monthly.substring(1);
+                dMonthly=Double.parseDouble(monthly);
+            }
         }
         System.out.println("Monthly value is :"+dMonthly);
 
         //Print the GrossPay
         String grossPay=driver.findElement(By.xpath("//span[text()='Gross Pay']/../..//following-sibling::td")).getText();
-        grossPay=grossPay.substring(1);
         grossPay=grossPay.replaceAll(",","");
-        double dGrossPay=Double.parseDouble(grossPay);
+        double dGrossPay=0.00;
+        try{
+            dGrossPay=Double.parseDouble(grossPay);
+        }catch(NumberFormatException ne){
+            grossPay=grossPay.substring(1);
+            dGrossPay=Double.parseDouble(grossPay);
+        }
 
         double actualGrossPay=dAnnualBasicPay+dCarAllowance+dCostOfLivingAllowance+dMonthly;
         if(actualGrossPay==dGrossPay){
             System.out.println("Gross Pay is updated correctly");
         }else{
             System.out.println("Gross Pay is not updated correctly");
+            System.out.println("Actual Gross Pay is :"+actualGrossPay+" but the expected Gross Pay is :"+dGrossPay);
             throw new Exception();
         }
 
@@ -197,10 +221,14 @@ public class TC03_EditEmployee {
 
         //Validate the EPF value --> It should be Annual Basic Pay * EPF%
         String epf=driver.findElement(By.xpath("//span[text()='EPF']/../../td[3]/span")).getText();
-        epf=epf.substring(1);
         epf=epf.replaceAll(",","");
-        double dEPF=Double.parseDouble(epf);
-
+        double dEPF=0.00;
+        try{
+            dEPF=Double.parseDouble(epf);
+        }catch(NumberFormatException ne){
+            epf=epf.substring(1);
+            dEPF=Double.parseDouble(epf);
+        }
         double actualEPF=(dAnnualBasicPay*0.09);
         if(actualEPF==dEPF){
             System.out.println("EPF updated correctly");
@@ -213,18 +241,26 @@ public class TC03_EditEmployee {
         String pensionFund=driver.findElement(By.xpath("//span[text()='Pension Fund']/../../td[3]/span")).getText();
         double dPensionFund=0.00;
         if(!pensionFund.isEmpty()){
-            pensionFund=pensionFund.substring(1);
             pensionFund=pensionFund.replaceAll(",","");
-            dPensionFund=Double.parseDouble(pensionFund);
+            try{
+                dPensionFund=Double.parseDouble(pensionFund);
+            }catch(NumberFormatException ne){
+                pensionFund=pensionFund.substring(1);
+                dPensionFund=Double.parseDouble(pensionFund);
+            }
         }
         System.out.println("Pension Fund Value is :"+dPensionFund);
 
         double actualTotalDeductions=dEPF+dPensionFund;
         String totalDeductions=driver.findElement(By.xpath("//span[text()='Total Deductions']/../..//following-sibling::td[1]")).getText();
-        totalDeductions=totalDeductions.substring(1);
         totalDeductions=totalDeductions.replaceAll(",","");
-        double dTotalDeductions=Double.parseDouble(totalDeductions);
-
+        double dTotalDeductions=0.00;
+        try{
+            dTotalDeductions=Double.parseDouble(totalDeductions);
+        }catch(NumberFormatException ne){
+            totalDeductions=totalDeductions.substring(1);
+            dTotalDeductions=Double.parseDouble(totalDeductions);
+        }
         if(dTotalDeductions==actualTotalDeductions){
             System.out.println("Total Deductions updated correctly");
         }else{
@@ -257,7 +293,7 @@ public class TC03_EditEmployee {
         //Click on Emergency Contacts
         driver.findElement(By.xpath("//a[text()='More ']")).click();
         System.out.println("Clicked on More drop down");
-        driver.findElement(By.xpath("//a[text()=' Contact Details ']")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Contact Details')]")).click();
         System.out.println("Cliked on Contact Details in the More drop down");
         //Enter the MobileNumber
         driver.findElement(By.xpath("//input[@id='emp_mobile']")).clear();
@@ -265,11 +301,6 @@ public class TC03_EditEmployee {
         System.out.println("Mobile number changed ");
         driver.findElement(By.xpath("//button[text()='Save']")).click();
         System.out.println("Clicked on save button");
-        //Click on +Add button
-        //Click Name and Enter some Random Data
-        //Enter some relationship
-
-        //Click on Save
 
         //Click on Home button
         driver.findElement(By.xpath("//a[@data-automation-id='menu_home']")).click();
