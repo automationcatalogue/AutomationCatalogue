@@ -60,9 +60,7 @@ public class TC04_ApplyLeave {
                 break;
             }
         }
-
-
-
+        
         //leave from Date
         String from_date="17-August-2022";
         String fd_expectedYear=from_date.split("-")[2];
@@ -71,8 +69,8 @@ public class TC04_ApplyLeave {
 
         driver.findElement(By.xpath("(//i[text()='date_range'])[1]")).click();
         System.out.println("Click action is performed on From date menu");
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--year']")));
-        driver.findElement(By.xpath("//div[@class='select-wrapper picker__select--year']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")));
+        driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")).click();
         System.out.println("Year drop-down is clicked");
         //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li")));
         List<WebElement> elements_years=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li"));
@@ -80,12 +78,12 @@ public class TC04_ApplyLeave {
             String actualYear=element_year.getText();
             if(actualYear.equalsIgnoreCase(fd_expectedYear)){
                 element_year.click();
-                System.out.println("Year is selected for the Date of Birth");
+                System.out.println("Year is selected for the leave from date");
                 break;
             }
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".select-wrapper.picker__select--month")));
-        driver.findElement(By.cssSelector(".select-wrapper.picker__select--month")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")));
+        driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")).click();
         System.out.println("Month drop-down is clicked");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li")));
         List<WebElement> elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
@@ -93,19 +91,20 @@ public class TC04_ApplyLeave {
             String actualMonth=element_month.getText();
             if(actualMonth.equalsIgnoreCase(fd_expectedMonth)){
                 element_month.click();
-                System.out.println("Month is selected for the Date of Birth");
+                System.out.println("Month is selected for the the leave from date");
                 break;
             }
         }
 
-        List<WebElement> elements_rows_dates=driver.findElements(By.xpath("//label[text()='Date of Birth']//following-sibling::span[1]//table//tbody/tr"));
+        List<WebElement> elements_rows_dates=driver.findElements(By.xpath("//label[text()='From Date']//following-sibling::span[1]//table//tbody/tr"));
         outer: for(WebElement ele_row_date:elements_rows_dates){
             List<WebElement> elements_columns_dates=ele_row_date.findElements(By.xpath("./td/div[contains(@class,'infocus')]"));
+            ////label[text()='From Date']//following-sibling::span[1]//table//tbody/tr/td/div[contains(@class,'infocus')]
             inner: for(WebElement ele_col_date:elements_columns_dates){
                 String actualDate=ele_col_date.getText();
                 if(actualDate.equalsIgnoreCase(fd_expectedDate)){
                     ele_col_date.click();
-                    System.out.println("Date is selected for the Date of Birth");
+                    System.out.println("Date is selected for the leave from date");
                     break outer;
                 }
             }
@@ -119,9 +118,9 @@ public class TC04_ApplyLeave {
         String to_expectedDate=to_dob.split("-")[0];
 
         driver.findElement(By.xpath("(//i[text()='date_range'])[2]")).click();
-        System.out.println("Click action is performed on From date menu");
+        System.out.println("Click action is performed on to date menu");
 
-        driver.findElement(By.xpath("//div[@class='select-wrapper picker__select--year']/span")).click();
+        driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[2]")).click();
         System.out.println("Year drop-down is clicked");
 
         List<WebElement> to_elements_years=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li"));
@@ -129,12 +128,12 @@ public class TC04_ApplyLeave {
             String actualYear=element_year.getText();
             if(actualYear.equalsIgnoreCase(to_expectedYear)){
                 element_year.click();
-                System.out.println("Year is selected for the Date of Birth");
+                System.out.println("Year is selected for the to date");
                 break;
             }
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".select-wrapper.picker__select--month")));
-        driver.findElement(By.cssSelector(".select-wrapper.picker__select--month")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='select-wrapper picker__select--month'])[2]")));
+        driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--month'])[2]")).click();
         System.out.println("Month drop-down is clicked");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li")));
         List<WebElement> to_elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
@@ -142,19 +141,19 @@ public class TC04_ApplyLeave {
             String actualMonth=element_month.getText();
             if(actualMonth.equalsIgnoreCase(to_expectedMonth)){
                 element_month.click();
-                System.out.println("Month is selected for the Date of Birth");
+                System.out.println("Month is selected for the to date");
                 break;
             }
         }
 
-        List<WebElement> to_elements_rows_dates=driver.findElements(By.xpath("//label[text()='Date of Birth']//following-sibling::span[1]//table//tbody/tr"));
+        List<WebElement> to_elements_rows_dates=driver.findElements(By.xpath("//label[text()='To Date']//following-sibling::span[1]//table//tbody/tr"));
         outer: for(WebElement ele_row_date:to_elements_rows_dates){
             List<WebElement> elements_columns_dates=ele_row_date.findElements(By.xpath("./td/div[contains(@class,'infocus')]"));
             inner: for(WebElement ele_col_date:elements_columns_dates){
                 String actualDate=ele_col_date.getText();
                 if(actualDate.equalsIgnoreCase(to_expectedDate)){
                     ele_col_date.click();
-                    System.out.println("Date is selected for the Date of Birth");
+                    System.out.println("Date is selected for the to date");
                     break outer;
                 }
             }
