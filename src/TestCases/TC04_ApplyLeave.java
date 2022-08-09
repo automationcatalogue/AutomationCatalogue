@@ -1,17 +1,16 @@
 package TestCases;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
+
 public class TC04_ApplyLeave {
     public static void main(String[] args) throws Exception{
-        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
@@ -60,14 +59,15 @@ public class TC04_ApplyLeave {
                 break;
             }
         }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Check Leave Balance']")));
 
         //leave from Date
-        String from_date="17-August-2022";
+        String from_date="11-June-2022";
         String fd_expectedYear=from_date.split("-")[2];
         String fd_expectedMonth=from_date.split("-")[1];
         String fd_expectedDate=from_date.split("-")[0];
 
-        driver.findElement(By.xpath("//input[@id='from']")).click();
+        driver.findElement(By.xpath("(//i[text()='date_range'])[1]")).click();
         System.out.println("Click action is performed on From date menu");
         Thread.sleep(2000);
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")).click();
@@ -81,6 +81,7 @@ public class TC04_ApplyLeave {
                 break;
             }
         }
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")));
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")).click();
         System.out.println("Month drop-down is clicked");
@@ -108,13 +109,15 @@ public class TC04_ApplyLeave {
             }
         }
 
+        Thread.sleep(2000);
+
         //leave to Date
-        String to_dob="19-August-2022";
+        String to_dob="16-June-2022";
         String to_expectedYear=to_dob.split("-")[2];
         String to_expectedMonth=to_dob.split("-")[1];
         String to_expectedDate=to_dob.split("-")[0];
 
-        driver.findElement(By.xpath("//input[@id='to']")).click();
+        driver.findElement(By.xpath("(//i[text()='date_range'])[2]")).click();
         System.out.println("Click action is performed on to date menu");
 
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")).click();
@@ -129,10 +132,13 @@ public class TC04_ApplyLeave {
                 break;
             }
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")));
-        driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/input")));
+
+        WebElement element_ToDate_Month=driver.findElement(By.xpath("//div[@class='select-wrapper picker__select--month']/input"));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();",element_ToDate_Month);
         System.out.println("Month drop-down is clicked");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li")));
+
         List<WebElement> to_elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
         for(WebElement element_month:to_elements_months){
             String actualMonth=element_month.getText();
@@ -162,41 +168,51 @@ public class TC04_ApplyLeave {
         driver.findElement(By.xpath("//button[text()='Apply']")).click();
         System.out.println("Clicked on apply button");
 
-        //Insufficient Balance page
-        driver.findElement(By.xpath("//div[@id='application_balance_modal']//a[text()='Ok']")).click();
-        System.out.println("Click action is performed on Ok button");
+        try{
+            //Insufficient Balance page
+            driver.findElement(By.xpath("//div[@id='application_balance_modal']//a[text()='Ok']")).click();
+            System.out.println("Click action is performed on Ok button");
 
-        driver.findElement(By.partialLinkText("Leave List")).click();
-        System.out.println("Leave List link is clicked");
+            driver.findElement(By.partialLinkText("Leave List")).click();
+            System.out.println("Leave List link is clicked");
 
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//div[@id='viewLeaveEntitlement']//table/tbody/tr[1]")));
-        List<WebElement> leaveEntitlements_allrows=driver.findElements(By.xpath("//div[@id='viewLeaveEntitlement']//table/tbody/tr"));
-        boolean found=false;
-        for(WebElement leaveEntitlement_row:leaveEntitlements_allrows){
+            wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//div[@id='viewLeaveEntitlement']//table/tbody/tr[1]")));
+            driver.navigate().refresh();
+            System.out.println("Leave List Webpage is refreshed");
+            wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//div[@id='viewLeaveEntitlement']//table/tbody/tr[1]")));
+            List<WebElement> leaveEntitlements_allrows=driver.findElements(By.xpath("//div[@id='viewLeaveEntitlement']//table/tbody/tr"));
+            boolean found=false;
+            for(WebElement leaveEntitlement_row:leaveEntitlements_allrows){
 
-            String leaveData=leaveEntitlement_row.findElement(By.xpath("./td[2]")).getText();
-            String leaveType=leaveEntitlement_row.findElement(By.xpath("./td[3]")).getText();
-            if(leaveData.contains(fd_expectedYear) && leaveData.contains(fd_expectedDate) && leaveData.contains(fd_expectedMonth.substring(0,3))
-            && leaveData.contains(to_expectedYear) && leaveData.contains(to_expectedDate) && leaveData.contains(to_expectedMonth.substring(0,3))
-            && leaveType.equalsIgnoreCase(expectedLeaveType)){
-                found =true;
-                break;
+                String leaveData=leaveEntitlement_row.findElement(By.xpath("./td[2]")).getText();
+                String leaveType=leaveEntitlement_row.findElement(By.xpath("./td[3]")).getText();
+                if(leaveData.contains(fd_expectedYear) && leaveData.contains(fd_expectedDate) && leaveData.contains(fd_expectedMonth.substring(0,3))
+                        && leaveData.contains(to_expectedYear) && leaveData.contains(to_expectedDate) && leaveData.contains(to_expectedMonth.substring(0,3))
+                        && leaveType.equalsIgnoreCase(expectedLeaveType)){
+                    found =true;
+                    break;
+                }
             }
-        }
 
-        if(found){
-            System.out.println("Leave is successfully applied");
-        }else{
-            System.out.println("Leave is successfully not applied");
-            throw new Exception();
+            if(found){
+                System.out.println("Leave is successfully applied");
+            }else{
+                System.out.println("Leave is successfully not applied");
+                throw new Exception();
+            }
+        }catch(NoSuchElementException e){
+            //Overlapping page
+            System.out.println("Overlap Leave Request pop-up is appeared, please change the leave dates");
+            driver.findElement(By.xpath("//a[text()='Close']")).click();
+            System.out.println("Clicked on close for overlapping page");
         }
 
         System.out.println("Apply Leave testcase execution is successful");
 
-        //driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-        //System.out.println("Logged out from the OrangeHRM application");
+        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+        System.out.println("Logged out from the OrangeHRM application");
 
-        //driver.quit();
+        driver.quit();
 
     }
 
