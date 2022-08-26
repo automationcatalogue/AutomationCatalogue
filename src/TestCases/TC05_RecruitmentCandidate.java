@@ -1,15 +1,12 @@
 package TestCases;
-import Utils.Constants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.yaml.snakeyaml.Yaml;
-import java.io.FileInputStream;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -56,29 +53,21 @@ public class TC05_RecruitmentCandidate {
         driver.findElement(By.xpath("//a[@id='addItemBtn']/i")).click();
         System.out.println("Add button is clicked");
 
-        driver.switchTo().defaultContent();
-        System.out.println("Exited from the frame");
-
-        driver.switchTo().frame("noncoreIframe");
-        System.out.println("switched back to the frame");
-
-        //Add Candidate
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#addCandidate_resume")));
-        driver.findElement(By.cssSelector("#addCandidate_resume")).click();
+        driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]")).click();
         System.out.println("SELECT Resume button is clicked");
 
-        driver.findElement(By.cssSelector("#addCandidate_resume")).sendKeys(path+"\\TestData\\TestResume.docx");
-        driver.findElement(By.cssSelector("#addCandidate_resume")).submit();
+        driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]/input")).sendKeys(path+"\\TestData\\TestResume.docx");
+        driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]")).submit();
         System.out.println("Candidate Resume is uploaded");
 
 
         String firstName="Ravi";
-        String lastName="Ravi";
+        String lastName="BCDE";
         String completeName=firstName+" "+lastName;
         driver.findElement(By.xpath("//input[@id='addCandidate_firstName']")).sendKeys(firstName);
         System.out.println("Candidate FirstName is entered");
 
-        driver.findElement(By.xpath("//input[@id='addCandidate_lastName']")).sendKeys(firstName);
+        driver.findElement(By.xpath("//input[@id='addCandidate_lastName']")).sendKeys(lastName);
         System.out.println("Candidate LastName is entered");
 
         driver.findElement(By.xpath("//input[@id='addCandidate_email']")).sendKeys("ravikiran@gmail.com");
@@ -124,23 +113,24 @@ public class TC05_RecruitmentCandidate {
         for(String latestSession:allSessions){
             driver.switchTo().window(latestSession);
         }
-        System.out.println("Window Switched to the lastest Session "+completeName);
+        System.out.println("Window Switched to the latest Session ");
 
         //CandidateSession
         String recruitmentStage="Shortlisted";
         driver.findElement(By.xpath("//label[text()='Current Stage of Recruitment']")).click();
         System.out.println("Click action performed on Current stage of recruitment");
-        List<WebElement> RecruitmentStages=driver.findElements(By.xpath("//ul[@id='dropdownObjectSearch_g6myw']/div/li/a/p"));
+        List<WebElement> RecruitmentStages=driver.findElements(By.xpath("//ul[contains(@id,'dropdownObjectSearch')][@class='dropdown-content dropdownObjectSearch active']/div/li/a/p"));
+        System.out.println("RecruitmentStages size is:"+RecruitmentStages.size());
+        Thread.sleep(1000);
         for(WebElement nextStage:RecruitmentStages){
             String NextStageText=nextStage.getText();
+            System.out.println(NextStageText);
             if(NextStageText.equalsIgnoreCase(recruitmentStage)){
                 nextStage.click();
+                System.out.println("Click action is performed on "+NextStageText);
                 break;
             }
         }
-
-        driver.findElement(By.xpath("//p//input[@type='checkbox']/../label")).click();
-        System.out.println("click sction is performed on Consent chechbox");
 
         driver.findElement(By.xpath("//a[@id='saveCandidateDetailsButton'][text()='Save']")).click();
         System.out.println("Click action is performed on Save Button");
@@ -154,26 +144,35 @@ public class TC05_RecruitmentCandidate {
         driver.navigate().refresh();
         System.out.println("Refreshed the Main session");
 
+        driver.switchTo().defaultContent();
+        System.out.println("Exited from the frame");
+
+        JavascriptExecutor js=((JavascriptExecutor)driver);
+
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("noncoreIframe"));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@id='addItemBtn']/i")));
         ListOfEmp=driver.findElements(By.xpath("//table[@class='pagedata']/tbody/tr/td[3]"));
         First: for(WebElement element_candidateName:ListOfEmp){
+            js.executeScript("arguments[0].scrollIntoView(true);",element_candidateName);
             String candidateName=element_candidateName.getText();
             if(candidateName.equalsIgnoreCase(completeName)){
                String stage=element_candidateName.findElement(By.xpath("./../td[7]/a")).getText();
-                if(recruitmentStage.equalsIgnoreCase(stage)){
+                if(stage.contains(recruitmentStage)){
                     System.out.println("Recruitment Stage is correctly updated");
-                    element_candidateName.findElement(By.xpath("./../td[7]/a")).click();
+                    WebElement element_stage=element_candidateName.findElement(By.xpath("./../td[7]/a"));
+                    js.executeScript("arguments[0].click();",element_stage);
+                    Thread.sleep(1000);
                     List<WebElement> elements_recruitmentStages=element_candidateName.findElements(By.xpath("./../td[7]/ul/li"));
-                    Second: for(WebElement element_stage:elements_recruitmentStages){
-                        stage=element_stage.getText();
+                    Second: for(WebElement element_stageValue:elements_recruitmentStages){
+                        stage=element_stageValue.getText();
                         if(stage.equalsIgnoreCase("Hired")){
-                            element_stage.click();
+                            element_stageValue.click();
                             System.out.println("Candidate stage changed to Hired");
                             break First;
                         }
                     }
                 }else{
-                    System.out.println("Recruitment Stage is correctly updated");
+                    System.out.println("Recruitment Stage is not correctly updated");
                     throw new Exception();
                 }
             }
@@ -181,5 +180,9 @@ public class TC05_RecruitmentCandidate {
 
         System.out.println("Recruitment testcase execution is successful");
 
+        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+        System.out.println("Logged out from the OrangeHRM application");
+
+        driver.quit();
     }
 }
