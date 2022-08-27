@@ -37,7 +37,7 @@ public class StaleElementDemo {
             }
         }
 
-        driver.switchTo().window(parentSession);
+        driver.switchTo().window(parentSession) ;
         System.out.println("Switched back to the Main Session");
         driver.close();
 
