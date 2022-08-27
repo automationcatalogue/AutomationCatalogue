@@ -3,12 +3,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 import java.util.List;
-public class TC06_DemoWebShopPurchaseCOD {
+public class TC06_DWSPurchaseCOD {
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver",
-                "C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver=new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
         System.out.println("Implicit timeout added for 20 seconds");
@@ -16,6 +19,9 @@ public class TC06_DemoWebShopPurchaseCOD {
         driver.get("http://demowebshop.tricentis.com/");
         System.out.println("Webpage DemoWebShop is loaded");
         driver.findElement(By.xpath("//a[text()='Log in']")).click();
+
+        WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
+
         System.out.println("Click action is performed on the Login button");
         driver.findElement(By.xpath("//input[@id='Email']")).sendKeys("aarosagarch@gmail.com");
         System.out.println("aarosagarch@gmail.com is entered as Email");
@@ -29,6 +35,9 @@ public class TC06_DemoWebShopPurchaseCOD {
         System.out.println("Click action is performed on Search button");
         driver.findElement(By.xpath("//input[@value='Add to cart']")).click();
         System.out.println("Click action is performed on Add to Cart");
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Shopping cart']")));
+
         driver.findElement(By.xpath("//span[text()='Shopping cart']")).click();
         System.out.println("Click action is performed on the shopping cart ");
         driver.findElement(By.xpath("//input[@name='termsofservice']")).click();

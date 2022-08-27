@@ -5,10 +5,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.time.Duration;
 import java.util.List;
-public class TC05_DemoWebShopAllOrdersTotal {
+public class TC08_DWSAllOrdersTotal {
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver",
-                "C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver=new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
         System.out.println("Implicit timeout added for 20 seconds");
@@ -27,10 +27,7 @@ public class TC05_DemoWebShopAllOrdersTotal {
         System.out.println("Click action is performed on Email ");
         driver.findElement(By.xpath("(//a[text()='Orders'])[1]")).click();
         System.out.println("Click action is performed on Orders");
-        driver.findElement(By.xpath("(//input[@class='button-2 order-details-button'])[1]")).click();
-        System.out.println("Click action performed on first order");
-        String OrderTotal=driver.findElement(By.xpath("//div[@class='order-overview']/div[3]/strong")).getText();
-        System.out.println("Order total is : "+OrderTotal);
+
         List<WebElement> DetailsElements =driver.findElements(By.xpath("//input[@class='button-2 order-details-button']"));
         Double allOrdersCount=0.0;
         for(WebElement Details:DetailsElements){
@@ -42,5 +39,10 @@ public class TC05_DemoWebShopAllOrdersTotal {
             allOrdersCount=allOrdersCount+TotalAsNumber;
         }
         System.out.println("Total cost of all orders is : "+allOrdersCount);
+
+        //driver.findElement(By.xpath("(//input[@class='button-2 order-details-button'])[1]")).click();
+        //System.out.println("Click action performed on first order");
+        //String OrderTotal=driver.findElement(By.xpath("//div[@class='order-overview']/div[3]/strong")).getText();
+        //System.out.println("Order total is : "+OrderTotal);
     }
 }
