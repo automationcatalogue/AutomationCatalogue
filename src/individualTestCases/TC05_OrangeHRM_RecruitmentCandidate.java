@@ -1,4 +1,4 @@
-package TestCases;
+package individualTestCases;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +10,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
-public class TC05_RecruitmentCandidate {
+public class TC05_OrangeHRM_RecruitmentCandidate {
     public static void main(String[] args) throws Exception{
 
         System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
@@ -22,7 +22,7 @@ public class TC05_RecruitmentCandidate {
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
 
-        driver.get("https://testautomation9-trials7501.orangehrmlive.com/");
+        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
         //OrangeHRM Login
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
@@ -44,7 +44,7 @@ public class TC05_RecruitmentCandidate {
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
 
         //Recruitment(ATS)
-        driver.findElement(By.xpath("(//a[@data-automation-id='menu_recruitment_Recruitment(ATS)']/span)[1]")).click();
+        driver.findElement(By.xpath("(//span[text()='Recruitment (ATS)'])[1]")).click();
         System.out.println("Recuritment(ATS) link is clicked");
 
         //Addbutton

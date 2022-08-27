@@ -1,4 +1,4 @@
-package TestCases;
+package individualTestCases;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,10 +7,10 @@ import java.time.Duration;
 import java.util.List;
 
 
-public class TC04_ApplyLeave {
+public class TC04_OrangeHRM_ApplyLeave {
     public static void main(String[] args) throws Exception{
-        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
@@ -18,7 +18,7 @@ public class TC04_ApplyLeave {
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
 
-        driver.get("https://testautomation9-trials7501.orangehrmlive.com/");
+        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
         //OrangeHRM Login
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");

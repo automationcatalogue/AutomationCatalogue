@@ -1,25 +1,15 @@
-package TestCases;
-import Utils.Constants;
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+package individualTestCases;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.function.Function;
 
-public class TC02_AddUser {
+public class TC02_OrangeHRM_AddUser {
     public static void main(String[] args) throws Exception {
 
         System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
@@ -30,7 +20,7 @@ public class TC02_AddUser {
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
 
-        driver.get("https://testautomation9-trials7501.orangehrmlive.com/");
+        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
         //OrangeHRM Login
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
@@ -65,7 +55,7 @@ public class TC02_AddUser {
         Thread.sleep(2000);
         driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(Keys.TAB);
 
-        String userName="odishrmtestd";
+        String userName="testautomation";
         driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(userName);
         System.out.println("User Name is entered");
 
@@ -150,7 +140,7 @@ public class TC02_AddUser {
 
         driver.findElement(By.xpath("//span[text()='Log Out']")).click();
 
-        //driver.quit();
+        driver.quit();
 
     }
 }

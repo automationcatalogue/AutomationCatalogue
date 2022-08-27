@@ -1,22 +1,16 @@
-package TestCases;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+package individualTestCases;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import selenium_IndividualScripts.webDriverBasics.ExcelDemo;
 
-import java.io.FileInputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
-public class TC01_AddEmployee {
+public class TC01_OrangeHRM_AddEmployee {
     public static void main(String[] args) throws Exception{
         //WebDriver Initialization
         System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
@@ -27,7 +21,7 @@ public class TC01_AddEmployee {
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
 
-        driver.get("https://testcatalogue-trials7501.orangehrmlive.com/");
+        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
         //OrangeHRM Login
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
@@ -53,7 +47,7 @@ public class TC01_AddEmployee {
         driver.findElement(By.xpath("//i[text()='add']")).click();
         System.out.println("click action performed on Add Employee");
         //Add Employee
-        String firstName="Automation";
+        String firstName="Test";
         String lastName="Catalogue";
         driver.findElement(By.xpath("//input[@id='first-name-box']")).sendKeys(firstName);
         System.out.println("FirstName is entered");
@@ -181,7 +175,7 @@ public class TC01_AddEmployee {
         System.out.println("Click action is performed on Employee List");
         //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
 
-        driver.navigate().to("https://testcatalogue-trials7501.orangehrmlive.com/client/#/pim/employees");
+        driver.navigate().to("https://automationcatalogue-trials76.orangehrmlive.com/client/#/pim/employees");
 
         //Add Employee verification
         String completeName=firstName+" "+lastName;

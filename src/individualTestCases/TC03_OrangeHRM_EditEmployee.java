@@ -1,9 +1,4 @@
-package TestCases;
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+package individualTestCases;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,13 +6,11 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
-public class TC03_EditEmployee {
+public class TC03_OrangeHRM_EditEmployee {
     public static void main(String[] args) throws Exception {
         System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
         //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
@@ -28,7 +21,7 @@ public class TC03_EditEmployee {
         System.out.println("Implicit timeout added for 20 seconds");
         driver.manage().window().maximize();
 
-        driver.get("https://testautomation9-trials7501.orangehrmlive.com/");
+        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
         System.out.println("OrangeHRM url loaded");
         //OrangeHRM Login
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
@@ -60,7 +53,7 @@ public class TC03_EditEmployee {
 
         driver.findElement(By.xpath("//input[@id='lastName']")).clear();
         System.out.println("clear action is performed on Last name field");
-        String newLastname = "testa";
+        String newLastname = "automation";
         driver.findElement(By.xpath("//input[@id='lastName']")).sendKeys(newLastname);
         System.out.println(newLastname + " is entered as new Last name");
 
@@ -310,7 +303,7 @@ public class TC03_EditEmployee {
         driver.findElement(By.linkText("Employee List")).click();
         System.out.println("click action performed on Employee List link");
 
-        driver.navigate().to("https://testautomation9-trials7501.orangehrmlive.com/client/#/pim/employees");
+        driver.navigate().to("https://automationcatalogue-trials76.orangehrmlive.com/client/#/pim/employees");
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")));
 
