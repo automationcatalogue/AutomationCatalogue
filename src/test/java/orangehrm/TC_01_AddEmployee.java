@@ -6,32 +6,28 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.*;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
 public class TC_01_AddEmployee {
+    static WebDriver driver;
     public static void main(String[] args) throws Exception{
-        //WebDriver Initialization
-        //System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver=new ChromeDriver();
+
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        System.out.println("Implicit timeout added for 20 seconds");
-        driver.manage().window().maximize();
 
-        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
-        System.out.println("OrangeHRM url loaded");
-        //OrangeHRM Login
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
-        System.out.println("Admin is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is Entered as password");
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        System.out.println("Login button is clicked");
+        String yamlPath = path+"\\src\\main\\resources\\Config.yaml";
+        String browserName = YamlUtils.getYamlData(yamlPath,"browser");
+        driver= Utils.launchBrowser(browserName);
+        new BaseClass(driver);
+
+        String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
+        DriverUtils.loadURL(url);
+
+        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
         //Login verification
         boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -57,9 +53,10 @@ public class TC_01_AddEmployee {
         System.out.println("LastName is entered");
         driver.findElement(By.xpath("//i[text()='arrow_drop_down']")).click();
         System.out.println("Drop-down for location is clicked");
-        String location="India Office";
-        driver.findElement(By.xpath("//span[text()='"+location+"']")).click();
-        System.out.println(location+" is selected from a drop-down");
+        String explocation="India Office";
+        By locator_Locations = By.xpath("//label[text()='Location']//following-sibling::div//ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_Locations, explocation);
+
         driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
         System.out.println("click action performed on next button");
 
@@ -75,28 +72,15 @@ public class TC_01_AddEmployee {
 
         driver.findElement(By.cssSelector(".select-wrapper.picker__select--year")).click();
         System.out.println("Year drop-down is clicked");
-        List<WebElement> elements_years=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li"));
-        for(WebElement element_year:elements_years){
-            String actualyear=element_year.getText();
-            if(actualyear.equalsIgnoreCase(expectedYear)){
-                element_year.click();
-                System.out.println("Year is selected for the Date of Birth");
-                break;
-            }
-        }
+        By locator_Years = By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_Years, expectedYear);
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".select-wrapper.picker__select--month")));
         driver.findElement(By.cssSelector(".select-wrapper.picker__select--month")).click();
         System.out.println("Month drop-down is clicked");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li")));
-        List<WebElement> elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
-        for(WebElement element_month:elements_months){
-            String actualMonth=element_month.getText();
-            if(actualMonth.equalsIgnoreCase(expectedMonth)){
-                element_month.click();
-                System.out.println("Month is selected for the Date of Birth");
-                break;
-            }
-        }
+        Thread.sleep(2000);
+        By locator_months = By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_months, expectedMonth);
 
         List<WebElement> elements_rows_dates=driver.findElements(By.xpath("//label[text()='Date of Birth']//following-sibling::span[1]//table//tbody/tr"));
         outer: for(WebElement ele_row_date:elements_rows_dates){
@@ -124,43 +108,23 @@ public class TC_01_AddEmployee {
         element_RegionDropDown.click();
         System.out.println("Region drop-down is clicked");
         String expectedRegion="Region-2";
-        List<WebElement> elements_regions=driver.findElements(By.xpath("//label[text()='Region']//following-sibling::div[1]/div//ul/li/a/span"));
-        for(WebElement ele_region:elements_regions){
-            String actualRegion=ele_region.getText();
-            if(actualRegion.equalsIgnoreCase(expectedRegion)){
-                ele_region.click();
-                System.out.println("Region value is selected");
-                break;
-            }
-        }
+        By locator_Regions = By.xpath("//label[text()='Region']//following-sibling::div[1]/div//ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_Regions, expectedRegion);
 
         WebElement element_FTEDropDown=driver.findElement(By.xpath("//label[text()='FTE']//following-sibling::div[1]/button/div/div/div"));
         element_FTEDropDown.click();
         System.out.println("FTE drop-down is clicked");
         String expectedFTE="0.75";
-        List<WebElement> elements_ftes=driver.findElements(By.xpath("//label[text()='FTE']//following-sibling::div[1]/div//ul/li/a/span"));
-        for(WebElement ele_fte:elements_ftes){
-            String actualFTE=ele_fte.getText();
-            if(actualFTE.equalsIgnoreCase(expectedFTE)){
-                ele_fte.click();
-                System.out.println("FTE value is selected");
-                break;
-            }
-        }
+        By locator_ftes = By.xpath("//label[text()='FTE']//following-sibling::div[1]/div//ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_ftes, expectedFTE);
+
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/button/div/div/div")));
         WebElement element_TemporaryDepartmentDropDown=driver.findElement(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/button/div/div/div"));
         element_TemporaryDepartmentDropDown.click();
         System.out.println("Temporary Department drop-down is clicked");
         String expectedTemporaryDepartment="Sub unit-3";
-        List<WebElement> elements_temporaryDepartments=driver.findElements(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/div//ul/li/a/span"));
-        for(WebElement ele_temporaryDepartment:elements_temporaryDepartments){
-            String actualTemporaryDepartment=ele_temporaryDepartment.getText();
-            if(actualTemporaryDepartment.equalsIgnoreCase(expectedTemporaryDepartment)){
-                ele_temporaryDepartment.click();
-                System.out.println("Temporary Department value is selected");
-                break;
-            }
-        }
+        By locator_TemporaryDepartments = By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/div//ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_TemporaryDepartments, expectedTemporaryDepartment);
 
         //PersonalDetails - last page
         driver.findElement(By.xpath("//button[text()='Save']")).click();
@@ -237,7 +201,7 @@ public class TC_01_AddEmployee {
         }
 
         String actualLocation=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[8]")).getText();
-        if(location.equalsIgnoreCase(actualLocation)){
+        if(explocation.equalsIgnoreCase(actualLocation)){
             System.out.println("Location verification is successful");
         }else {
             System.out.println("Location verification is not successful");
@@ -246,10 +210,8 @@ public class TC_01_AddEmployee {
 
         System.out.println("Add Employee is successful");
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-        System.out.println("Logged out from the OrangeHRM application");
-
-        driver.quit();
+        CommonMethods_OrangeHRM.logout_orangeHRM();
+        DriverUtils.closeBrowser();
     }
 
 }
