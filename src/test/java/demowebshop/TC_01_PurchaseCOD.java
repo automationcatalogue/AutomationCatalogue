@@ -11,9 +11,9 @@ import java.time.Duration;
 import java.util.List;
 
 public class TC_01_PurchaseCOD {
-    public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
+    public static void main(String[] args) throws Exception {
+        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
         WebDriver driver=new ChromeDriver();
         System.out.println("Chrome Browser is launched");
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
@@ -45,6 +45,9 @@ public class TC_01_PurchaseCOD {
 
         driver.findElement(By.xpath("//span[text()='Shopping cart']")).click();
         System.out.println("Click action is performed on the shopping cart ");
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@name='termsofservice']")));
+
         driver.findElement(By.xpath("//input[@name='termsofservice']")).click();
         System.out.println("Click action performed on Terms of Service");
         driver.findElement(By.xpath("//button[@name='checkout']")).click();
