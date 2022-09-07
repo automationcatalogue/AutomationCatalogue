@@ -19,6 +19,10 @@ public class DriverUtils extends BaseClass{
         System.out.println(URL+" is loaded");
     }
 
+    /**
+     * This method is used to close the browser
+     * @author sagar
+     */
     public static void closeBrowser(){
         getDriver().quit();
         System.out.println("Driver instance is terminated and all browsers are closed");

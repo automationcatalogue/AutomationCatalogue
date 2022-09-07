@@ -25,7 +25,14 @@ public class YamlUtils {
         return map_yaml;
     }
 
-
+    /**
+     * This method is used to get the yaml data
+     * @param yamlPath
+     * @param key
+     * @return String
+     * @throws Exception
+     * @author sagar
+     */
     public static String getYamlData(String yamlPath, String key) throws Exception{
         HashMap map_yaml =loadYamlData(yamlPath);
         String value = (String) map_yaml.get(key);
@@ -34,6 +41,14 @@ public class YamlUtils {
 
     }
 
+    /**
+     * This method is used to set the yaml data
+     * @param yamlPath
+     * @param key
+     * @param newValue
+     * @throws Exception
+     * @author sagar
+     */
     public static void setYamlData(String yamlPath,String key, String newValue) throws Exception{
         HashMap map_yaml =loadYamlData(yamlPath);
         FileWriter fw_yamlWriter = new FileWriter(yamlPath);

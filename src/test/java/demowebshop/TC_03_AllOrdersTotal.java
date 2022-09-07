@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import utilities.*;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -12,26 +13,24 @@ import java.util.Map;
 import java.util.Set;
 
 public class TC_03_AllOrdersTotal {
-    public static void main(String[] args) {
-        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver=new ChromeDriver();
-        System.out.println("Chrome Browser is launched");
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        System.out.println("Implicit timeout added for 20 seconds");
-        driver.manage().window().maximize();
-        driver.get("http://demowebshop.tricentis.com/");
-        System.out.println("DemoWebShop website is loaded");
+    static WebDriver driver;
+    public static void main(String[] args) throws Exception {
+        String path=System.getProperty("user.dir");
+        System.out.println("Project Path is :"+path);
+
+        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+
+        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
+        driver= Utils.launchBrowser(browserName);
+
+
+        new BaseClass(driver);
+
+        String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
+        DriverUtils.loadURL(url);
 
         //DemoWebShop Login
-        driver.findElement(By.xpath("//a[text()='Log in']")).click();
-        System.out.println("Click action is performed on the Login button");
-        driver.findElement(By.xpath("//input[@id='Email']")).sendKeys("aarosagarch@gmail.com");
-        System.out.println("aarosagarch@gmail.com is entered as Email");
-        driver.findElement(By.xpath("//input[@id='Password']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is entered as password");
-        driver.findElement(By.xpath("//input[@value='Log in']")).click();
-        System.out.println("Click action is performed on Login Button");
+        CommonMethods_demoWebShop.login_DemoWebShop("aarosagarch@gmail.com","Admin@123");
 
         driver.findElement(By.xpath("//a[text()='aarosagarch@gmail.com']")).click();
         System.out.println("Click action is performed on Email ");
@@ -75,10 +74,9 @@ public class TC_03_AllOrdersTotal {
             System.out.println("Order Date is :"+eachEntry_Daywise.getKey()+" Sum of all Orders :"+eachEntry_Daywise.getValue());
         }
 
-        driver.findElement(By.xpath("//a[text()='Log out']")).click();
-        System.out.println("Click action is performed on Logout");
+        CommonMethods_demoWebShop.logout_DemoWebShop();
 
-        driver.quit();
-        System.out.println("Browser is closed");
+        DriverUtils.closeBrowser();
+
     }
 }

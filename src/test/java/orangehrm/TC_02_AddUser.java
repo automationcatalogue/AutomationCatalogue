@@ -6,31 +6,29 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.*;
 
 import java.time.Duration;
 import java.util.function.Function;
 
 public class TC_02_AddUser {
+    static WebDriver driver;
     public static void main(String[] args) throws Exception {
-
-        //System.setProperty("webdriver.chrome.driver","C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver=new ChromeDriver();
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        System.out.println("Implicit timeout added for 20 seconds");
-        driver.manage().window().maximize();
 
-        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
-        System.out.println("OrangeHRM url loaded");
+        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+
+        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
+        driver= Utils.launchBrowser(browserName);
+
+        new BaseClass(driver);
+
+        String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
+        DriverUtils.loadURL(url);
+
         //OrangeHRM Login
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
-        System.out.println("Admin is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is Entered as password");
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        System.out.println("Login button is clicked");
+        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
         //Login verification
         boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -140,9 +138,9 @@ public class TC_02_AddUser {
             throw new Exception();
         }
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
+        CommonMethods_OrangeHRM.logout_orangeHRM();
 
-        driver.quit();
+        DriverUtils.closeBrowser();
 
     }
 }

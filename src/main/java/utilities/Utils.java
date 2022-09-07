@@ -55,6 +55,12 @@ public class Utils {
         return driver;
     }
 
+    /**
+     * This method is used to select the drop down without select tag
+     * @param locator
+     * @param expData
+     * @author sagar
+     */
     public static void selectDropdown_withoutSelectTag(By locator, String expData){
         List<WebElement> elements_list=driver.findElements(locator);
         for(WebElement element:elements_list){

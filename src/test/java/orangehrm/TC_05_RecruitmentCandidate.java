@@ -7,32 +7,30 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.*;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
 public class TC_05_RecruitmentCandidate {
+    static WebDriver driver;
     public static void main(String[] args) throws Exception{
+        String path=System.getProperty("user.dir");
+        System.out.println("Project Path is :"+path);
 
-        System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        //System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        String path = System.getProperty("user.dir");
-        System.out.println("Project Path is :" + path);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        System.out.println("Implicit timeout added for 20 seconds");
-        driver.manage().window().maximize();
+        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
 
-        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
-        System.out.println("OrangeHRM url loaded");
+        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
+        driver= Utils.launchBrowser(browserName);
+
+        new BaseClass(driver);
+
+        String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
+        DriverUtils.loadURL(url);
+
         //OrangeHRM Login
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
-        System.out.println("Admin is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is Entered as password");
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        System.out.println("Login button is clicked");
+        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -182,9 +180,8 @@ public class TC_05_RecruitmentCandidate {
 
         System.out.println("Recruitment testcase execution is successful");
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-        System.out.println("Logged out from the OrangeHRM application");
+        CommonMethods_OrangeHRM.logout_orangeHRM();
 
-        driver.quit();
+        DriverUtils.closeBrowser();
     }
 }

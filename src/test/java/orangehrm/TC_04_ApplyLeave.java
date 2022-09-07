@@ -4,30 +4,28 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.*;
 
 import java.time.Duration;
 import java.util.List;
 
 public class TC_04_ApplyLeave {
+    static WebDriver driver;
     public static void main(String[] args) throws Exception{
-        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        String path = System.getProperty("user.dir");
-        System.out.println("Project Path is :" + path);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        System.out.println("Implicit timeout added for 20 seconds");
-        driver.manage().window().maximize();
+        String path=System.getProperty("user.dir");
+        System.out.println("Project Path is :"+path);
 
-        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
-        System.out.println("OrangeHRM url loaded");
+        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+
+        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
+        driver= Utils.launchBrowser(browserName);
+
+        new BaseClass(driver);
+
+        String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
+        DriverUtils.loadURL(url);
         //OrangeHRM Login
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
-        System.out.println("Admin is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is Entered as password");
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        System.out.println("Login button is clicked");
+        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -51,15 +49,8 @@ public class TC_04_ApplyLeave {
         System.out.println("Click action is performed on Leave Type");
         Thread.sleep(1000);
         String expectedLeaveType="Sick Leave - US";
-        List<WebElement> elements_leaveTypes = driver.findElements(By.xpath("//div[@id='leaveType_inputfileddiv']/div/ul/li"));
-        for(WebElement element_leave:elements_leaveTypes){
-            String leaveType=element_leave.getText();
-            if(leaveType.equalsIgnoreCase(expectedLeaveType)){
-                element_leave.click();
-                System.out.println(expectedLeaveType+" is selected as LeaveType");
-                break;
-            }
-        }
+        By locator_leaveTypes=By.xpath("//div[@id='leaveType_inputfileddiv']/div/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_leaveTypes,expectedLeaveType);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Check Leave Balance']")));
 
         //leave from Date
@@ -73,29 +64,16 @@ public class TC_04_ApplyLeave {
         Thread.sleep(2000);
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")).click();
         System.out.println("Year drop-down is clicked");
-        List<WebElement> elements_years=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li"));
-        for(WebElement element_year:elements_years){
-            String actualYear=element_year.getText();
-            if(actualYear.equalsIgnoreCase(fd_expectedYear)){
-                element_year.click();
-                System.out.println("Year is selected for the leave from date");
-                break;
-            }
-        }
+        By locator_fdYears=By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_fdYears,fd_expectedYear);
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")));
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--month'])[1]")).click();
         System.out.println("Month drop-down is clicked");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li")));
-        List<WebElement> elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
-        for(WebElement element_month:elements_months){
-            String actualMonth=element_month.getText();
-            if(actualMonth.equalsIgnoreCase(fd_expectedMonth)){
-                element_month.click();
-                System.out.println("Month is selected for the the leave from date");
-                break;
-            }
-        }
+        By locator_fdMonths=By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_fdMonths,fd_expectedMonth);
+
 
         List<WebElement> elements_rows_dates=driver.findElements(By.xpath("//label[text()='From Date']//following-sibling::span[1]//table//tbody/tr"));
         outer: for(WebElement ele_row_date:elements_rows_dates){
@@ -123,32 +101,18 @@ public class TC_04_ApplyLeave {
 
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")).click();
         System.out.println("Year drop-down is clicked");
+        By locator_tdYears=By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_tdYears,to_expectedYear);
 
-        List<WebElement> to_elements_years=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--year']/ul/li"));
-        for(WebElement element_year:to_elements_years){
-            String actualYear=element_year.getText();
-            if(actualYear.equalsIgnoreCase(to_expectedYear)){
-                element_year.click();
-                System.out.println("Year is selected for the to date");
-                break;
-            }
-        }
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/input")));
 
         WebElement element_ToDate_Month=driver.findElement(By.xpath("//div[@class='select-wrapper picker__select--month']/input"));
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();",element_ToDate_Month);
         System.out.println("Month drop-down is clicked");
+        By locator_tdMonths= By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li");
+        Utils.selectDropdown_withoutSelectTag(locator_tdMonths,to_expectedMonth);
 
-        List<WebElement> to_elements_months=driver.findElements(By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li"));
-        for(WebElement element_month:to_elements_months){
-            String actualMonth=element_month.getText();
-            if(actualMonth.equalsIgnoreCase(to_expectedMonth)){
-                element_month.click();
-                System.out.println("Month is selected for the to date");
-                break;
-            }
-        }
 
         List<WebElement> to_elements_rows_dates=driver.findElements(By.xpath("//label[text()='To Date']//following-sibling::span[1]//table//tbody/tr"));
         outer: for(WebElement ele_row_date:to_elements_rows_dates){
@@ -210,10 +174,9 @@ public class TC_04_ApplyLeave {
 
         System.out.println("Apply Leave testcase execution is successful");
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-        System.out.println("Logged out from the OrangeHRM application");
+        CommonMethods_OrangeHRM.logout_orangeHRM();
 
-        driver.quit();
+        DriverUtils.closeBrowser();
 
     }
 

@@ -6,31 +6,30 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import utilities.*;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
 public class TC_03_EditEmployee {
-    public static void main(String[] args) throws Exception {
-        //System.setProperty("webdriver.chrome.driver", "C:\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver","C:\\Anitha\\AutomationCatalogue\\Drivers\\Chrome\\chromedriver_win32_1\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        String path = System.getProperty("user.dir");
-        System.out.println("Project Path is :" + path);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        System.out.println("Implicit timeout added for 20 seconds");
-        driver.manage().window().maximize();
 
-        driver.get("https://automationcatalogue-trials76.orangehrmlive.com/");
-        System.out.println("OrangeHRM url loaded");
+    static WebDriver driver;
+    public static void main(String[] args) throws Exception {
+
+        String path=System.getProperty("user.dir");
+        System.out.println("Project Path is :"+path);
+
+        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+
+        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
+        driver= Utils.launchBrowser(browserName);
+
+        new BaseClass(driver);
+
+        String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
+        DriverUtils.loadURL(url);
         //OrangeHRM Login
-        driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys("Admin");
-        System.out.println("Admin is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is Entered as password");
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        System.out.println("Login button is clicked");
+        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -69,19 +68,11 @@ public class TC_03_EditEmployee {
         }
 
         //Updating Nationality
-        String expectedNationality = "Indonesian";
         driver.findElement(By.xpath("//div[@id='nation_code_inputfileddiv']/div/input")).click();
         System.out.println("Nationality drop-down is clicked");
-        List<WebElement> elements_Nationalities = driver.findElements(By.xpath("//div[@id='nation_code_inputfileddiv']/div/ul/li/span"));
-
-        for (WebElement ele_nationality : elements_Nationalities) {
-            String actualNationality = ele_nationality.getText();
-            if (actualNationality.equals(expectedNationality)) {
-                ele_nationality.click();
-                System.out.println(actualNationality + " is selected for the Nationality drop-down");
-                break;
-            }
-        }
+        String expectedNationality = "Indonesian";
+        By locator_Nationalities=By.xpath("//div[@id='nation_code_inputfileddiv']/div/ul/li/span");
+        Utils.selectDropdown_withoutSelectTag(locator_Nationalities,expectedNationality);
 
         driver.findElement(By.xpath("(//button[text()='Save'])[1]")).click();
         System.out.println("Click action is performed on save button");
@@ -91,35 +82,21 @@ public class TC_03_EditEmployee {
         System.out.println("Click action performed on Job tab ");
 
         //Update the Location information
-        String expectedLocation="Jamaica training center";
         driver.findElement(By.xpath("//label[@for='location_id']/../div/button")).click();
         System.out.println("Click action performed on Location drop down");
-        List<WebElement> elements_locations=driver.findElements(By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span"));
-        for(WebElement ele_location:elements_locations){
-            String actualLocation=ele_location.getText();
-            if(actualLocation.equalsIgnoreCase(expectedLocation)){
-                ele_location.click();
-                System.out.println(actualLocation+" is selected for Location");
-                break;
-            }
-        }
+        String expectedLocation="Jamaica training center";
+        By locator_locations=By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_locations,expectedLocation);
 
         driver.findElement(By.xpath("//a[text()='Save']")).click();
         System.out.println("Save button is clicked in the Jobs page");
 
+        //Updating the Event information
         driver.findElement(By.xpath("//label[text()='Event']//following-sibling::div[1]/button")).click();
         System.out.println("Event drop-down is clicked");
-
         String expectedEvent="First Time Addition";
-        List<WebElement> elements_Events=driver.findElements(By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span"));
-        for(WebElement ele_event:elements_Events){
-            String actualEvent=ele_event.getText();
-            if(actualEvent.equalsIgnoreCase(expectedEvent)){
-                ele_event.click();
-                System.out.println(actualEvent+ " is selected from the Event drop-down");
-                break;
-            }
-        }
+        By locator_events=By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_events,expectedEvent);
 
         driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
         System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
@@ -271,15 +248,8 @@ public class TC_03_EditEmployee {
         System.out.println("Event drop-down is clicked");
 
         expectedEvent="First Time Addition";
-        List<WebElement> elements_Events_Jobs=driver.findElements(By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span"));
-        for(WebElement ele_event:elements_Events_Jobs){
-            String actualEvent=ele_event.getText();
-            if(actualEvent.equalsIgnoreCase(expectedEvent)){
-                ele_event.click();
-                System.out.println(actualEvent+ " is selected from the Event drop-down");
-                break;
-            }
-        }
+        By locator_Events=By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span");
+        Utils.selectDropdown_withoutSelectTag(locator_Events,expectedEvent);
 
         driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
         System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
@@ -374,10 +344,9 @@ public class TC_03_EditEmployee {
 
         System.out.println("Edit Employee is successful");
 
-        driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-        System.out.println("Logged out from the OrangeHRM application");
+        CommonMethods_OrangeHRM.logout_orangeHRM();
 
-        driver.quit();
+        DriverUtils.closeBrowser();
 
     }
 

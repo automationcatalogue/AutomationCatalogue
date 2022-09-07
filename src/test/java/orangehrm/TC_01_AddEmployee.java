@@ -155,7 +155,6 @@ public class TC_01_AddEmployee {
 
         //driver.findElement(By.xpath("//i[text()='ohrm_search']")).click();
         //System.out.println("click action is performed on Search button");
-
         //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Rows per page']")));
 
         Wait<WebDriver> wait_EmployeeName= new FluentWait<WebDriver>(driver)
