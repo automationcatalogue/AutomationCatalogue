@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -15,19 +17,24 @@ import java.util.Set;
 
 public class TC_05_RecruitmentCandidate {
     static WebDriver driver;
-    public static void main(String[] args) throws Exception{
+    public static String browserName;
+    public static String yamlPath;
+    @BeforeClass
+    public void beforeRecruitmentCandidate() throws Exception{
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
-        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+        yamlPath = path+"\\src\\main\\resources\\Config.yaml";
+        browserName = YamlUtils.getYamlData(yamlPath,"browser");
 
-        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
         driver= Utils.launchBrowser(browserName);
-
         new BaseClass(driver);
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+    }
+    @Test
+    public void recruitmentCandidate() throws Exception{
 
         //OrangeHRM Login
         CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
@@ -56,7 +63,7 @@ public class TC_05_RecruitmentCandidate {
         driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]")).click();
         System.out.println("SELECT Resume button is clicked");
 
-        driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]/input")).sendKeys(path+"\\TestData\\TestResume.docx");
+        driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]/input")).sendKeys(yamlPath+"\\TestData\\TestResume.docx");
         driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]")).submit();
         System.out.println("Candidate Resume is uploaded");
 

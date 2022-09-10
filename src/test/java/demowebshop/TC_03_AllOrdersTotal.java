@@ -3,6 +3,7 @@ package demowebshop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -13,7 +14,8 @@ import java.util.Set;
 
 public class TC_03_AllOrdersTotal {
     static WebDriver driver;
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void allOrdersTotal() throws Exception {
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 

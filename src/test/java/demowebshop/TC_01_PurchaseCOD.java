@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
 import java.time.Duration;
@@ -12,7 +14,8 @@ import java.util.List;
 
 public class TC_01_PurchaseCOD {
     static WebDriver driver;
-    public static void main(String[] args) throws Exception {
+    @BeforeClass
+    public void beforePurchaseCOD()throws Exception{
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
@@ -25,6 +28,9 @@ public class TC_01_PurchaseCOD {
 
         String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
         DriverUtils.loadURL(url);
+    }
+    @Test
+    public void purchaseCOD() throws Exception {
 
         //Demo WebShop Login
         CommonMethods_demoWebShop.login_DemoWebShop("aarosagarch@gmail.com","Admin@123");

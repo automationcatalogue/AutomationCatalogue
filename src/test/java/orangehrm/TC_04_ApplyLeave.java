@@ -3,6 +3,8 @@ package orangehrm;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -11,19 +13,24 @@ import java.util.List;
 
 public class TC_04_ApplyLeave {
     static WebDriver driver;
-    public static void main(String[] args) throws Exception{
+    public static String browserName;
+    public static String yamlPath;
+    @BeforeClass
+    public void beforeApplyLeave() throws Exception{
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
-        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+        yamlPath = path+"\\src\\main\\resources\\Config.yaml";
+        browserName = YamlUtils.getYamlData(yamlPath,"browser");
 
-        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
         driver= Utils.launchBrowser(browserName);
-
         new BaseClass(driver);
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+    }
+    @Test
+    public void applyLeave() throws Exception{
         //OrangeHRM Login
         CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 

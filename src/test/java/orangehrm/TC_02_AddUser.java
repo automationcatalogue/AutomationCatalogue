@@ -5,6 +5,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
@@ -14,22 +15,24 @@ import java.util.function.Function;
 
 public class TC_02_AddUser {
     static WebDriver driver;
-
-    @Test
-    public void adduser() throws Exception {
+    public static String browserName;
+    public static String yamlPath;
+    @BeforeClass
+    public void beforeAddUser() throws Exception{
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
-        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+        yamlPath = path+"\\src\\main\\resources\\Config.yaml";
+        browserName = YamlUtils.getYamlData(yamlPath,"browser");
 
-        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
         driver= Utils.launchBrowser(browserName);
-
         new BaseClass(driver);
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
-
+    }
+    @Test
+    public void adduser() throws Exception {
         //OrangeHRM Login
         CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
