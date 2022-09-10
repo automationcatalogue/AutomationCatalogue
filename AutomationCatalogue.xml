@@ -1,0 +1,18 @@
+<suite name="Automation Catalogue TestCases execution" verbose="1" >
+    <test name="OrangeHRM testcases" >
+        <classes>
+            <class name="orangehrm.TC_01_AddEmployee" />
+            <class name="orangehrm.TC_02_AddUser" />
+            <class name="orangehrm.TC_03_EditEmployee"/>
+            <class name="orangehrm.TC_04_ApplyLeave"/>
+            <class name="orangehrm.TC_05_RecruitmentCandidate"/>
+        </classes>
+    </test>
+    <test name="DemoWebshop testcases">
+        <classes>
+            <class name="demowebshop.TC_01_PurchaseCOD"/>
+            <class name="demowebshop.TC_02_ReOrder" />
+            <class name="demowebshop.TC_03_AllOrdersTotal"/>
+        </classes>
+    </test>
+</suite>

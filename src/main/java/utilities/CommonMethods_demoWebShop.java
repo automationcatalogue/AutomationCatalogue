@@ -3,6 +3,7 @@ package utilities;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+
 public class CommonMethods_demoWebShop extends BaseClass{
     public CommonMethods_demoWebShop(WebDriver driver) {
         super(driver);

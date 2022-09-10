@@ -1,11 +1,15 @@
 package orangehrm;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import testcases.TestConfig;
+import utilities.BaseClass;
 import utilities.*;
 
 import java.time.Duration;
@@ -14,18 +18,26 @@ import java.util.function.Function;
 
 public class TC_01_AddEmployee {
     static WebDriver driver;
-    public static void main(String[] args) throws Exception{
+    public static String browserName;
+    public static String yamlPath;
 
+    @BeforeClass
+    public void beforeAddEmployee() throws Exception{
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
-        String yamlPath = path+"\\src\\main\\resources\\Config.yaml";
-        String browserName = YamlUtils.getYamlData(yamlPath,"browser");
+        yamlPath = path+"\\src\\main\\resources\\Config.yaml";
+        browserName = YamlUtils.getYamlData(yamlPath,"browser");
+
         driver= Utils.launchBrowser(browserName);
         new BaseClass(driver);
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+    }
+
+    @Test
+    public void addEmployee() throws Exception{
 
         CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
 
@@ -210,6 +222,10 @@ public class TC_01_AddEmployee {
         System.out.println("Add Employee is successful");
 
         CommonMethods_OrangeHRM.logout_orangeHRM();
+    }
+
+    @AfterClass
+    public void tearDown(){
         DriverUtils.closeBrowser();
     }
 

@@ -1,11 +1,12 @@
 package orangehrm;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Test;
+import utilities.BaseClass;
 import utilities.*;
 
 import java.time.Duration;
@@ -13,7 +14,9 @@ import java.util.function.Function;
 
 public class TC_02_AddUser {
     static WebDriver driver;
-    public static void main(String[] args) throws Exception {
+
+    @Test
+    public void adduser() throws Exception {
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 

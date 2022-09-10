@@ -2,10 +2,8 @@ package demowebshop;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import utilities.BaseClass;
 import utilities.*;
-
-import java.time.Duration;
 
 public class TC_02_ReOrder {
     static WebDriver driver;
