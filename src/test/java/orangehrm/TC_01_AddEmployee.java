@@ -1,5 +1,6 @@
 package orangehrm;
 
+import com.github.javafaker.Faker;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -56,9 +57,10 @@ public class TC_01_AddEmployee {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
         driver.findElement(By.xpath("//i[text()='add']")).click();
         System.out.println("click action performed on Add Employee");
+        Faker datafaker = new Faker();
         //Add Employee
-        String firstName="Test";
-        String lastName="Catalogue";
+        String firstName=datafaker.name().firstName();
+        String lastName=datafaker.name().lastName();
         driver.findElement(By.xpath("//input[@id='first-name-box']")).sendKeys(firstName);
         System.out.println("FirstName is entered");
         driver.findElement(By.xpath("//input[@id='last-name-box']")).sendKeys(lastName);

@@ -1,5 +1,7 @@
 package orangehrm;
 
+import com.github.javafaker.Faker;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -11,6 +13,9 @@ import utilities.BaseClass;
 import utilities.*;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 
 public class TC_02_AddUser {
@@ -45,11 +50,35 @@ public class TC_02_AddUser {
             throw new Exception();
         }
 
+        driver.findElement(By.linkText("Employee List")).click();
+        System.out.println("EmployeeList link is clicked");
+        WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
+
+        ArrayList<String> al_EmployeeIds = new ArrayList<String>();
+        List<WebElement> elementList_EmployeeIds = driver.findElements(By.xpath("//table[@id='employeeListTable']/tbody/tr/td[2]"));
+        for(WebElement element_EmployeeId:elementList_EmployeeIds){
+            String employeeId = element_EmployeeId.getText();
+            al_EmployeeIds.add(employeeId);
+        }
+
+        Random random = new Random();
+        int randomNumber;
+        while(true){
+            randomNumber=random.nextInt(51);
+            if(randomNumber==0){
+                continue;
+            }else{
+                System.out.println("Randomly generated number is :"+randomNumber);
+                break;
+            }
+        }
+        String employeeId = al_EmployeeIds.get(randomNumber);
+        System.out.println("Randomly selected employeeId is :"+employeeId);
 
         driver.findElement(By.xpath("(//span[text()='HR Administration'])[1]")).click();
         System.out.println("HR Administration link is clicked");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='systemUserDiv']//table//tbody//tr[1]")));
 
         driver.findElement(By.xpath("//i[text()='add']")).click();
@@ -61,7 +90,8 @@ public class TC_02_AddUser {
         Thread.sleep(2000);
         driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(Keys.TAB);
 
-        String userName="testautomation";
+        Faker datafaker = new Faker();
+        String userName=datafaker.name().username();
         driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(userName);
         System.out.println("User Name is entered");
 
