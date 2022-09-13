@@ -1,5 +1,6 @@
 package orangehrm;
 
+import com.github.javafaker.Faker;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -10,6 +11,9 @@ import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 
 public class TC_03_EditEmployee {
@@ -52,15 +56,36 @@ public class TC_03_EditEmployee {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")));
-        String employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")).getText();
-        System.out.println("Employee Id is :"+employeeId);
 
-        driver.findElement(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")).click();
-        System.out.println("Clicked on First Employee");
+        ArrayList<String> al_EmployeeIds = new ArrayList<String>();
+        List<WebElement> elementList_EmployeeIds = driver.findElements(By.xpath("//table[@id='employeeListTable']/tbody/tr/td[2]"));
+        for(WebElement element_EmployeeId:elementList_EmployeeIds){
+            String employeeId = element_EmployeeId.getText();
+            al_EmployeeIds.add(employeeId);
+        }
+
+        Random random = new Random();
+        int randomNumber;
+        while(true){
+            randomNumber=random.nextInt(51);
+            if(randomNumber==0){
+                continue;
+            }else{
+                System.out.println("Randomly generated number is :"+randomNumber);
+                break;
+            }
+        }
+        String employeeId = al_EmployeeIds.get(randomNumber);
+        System.out.println("Randomly selected employeeId is :"+employeeId);
+
+        driver.findElement(By.xpath("//table[@id='employeeListTable']//td[text()='"+employeeId+"']//following-sibling::td[1]")).click();
+        System.out.println("Clicked on Employee Name of the Employee Id :"+employeeId);
 
         driver.findElement(By.xpath("//input[@id='lastName']")).clear();
         System.out.println("clear action is performed on Last name field");
-        String newLastname = "automation";
+
+        Faker datafaker = new Faker();
+        String newLastname = datafaker.name().lastName();
         driver.findElement(By.xpath("//input[@id='lastName']")).sendKeys(newLastname);
         System.out.println(newLastname + " is entered as new Last name");
 
