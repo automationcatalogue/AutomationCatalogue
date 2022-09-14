@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
 
-public class TC_02_ReOrder {
+public class TC_07_ReOrder {
     static WebDriver driver;
     @Test
     public  void reOrder() throws Exception {

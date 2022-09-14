@@ -1,18 +1,16 @@
 package demowebshop;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class TC_03_AllOrdersTotal {
+public class TC_08_AllOrdersTotal {
     static WebDriver driver;
     @Test
     public void allOrdersTotal() throws Exception {

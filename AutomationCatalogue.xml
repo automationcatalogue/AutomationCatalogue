@@ -10,9 +10,9 @@
     </test>
     <test name="DemoWebshop testcases">
         <classes>
-            <class name="demowebshop.TC_01_PurchaseCOD"/>
-            <class name="demowebshop.TC_02_ReOrder" />
-            <class name="demowebshop.TC_03_AllOrdersTotal"/>
+            <class name="demowebshop.TC_06_PurchaseCOD"/>
+            <class name="demowebshop.TC_07_ReOrder" />
+            <class name="demowebshop.TC_08_AllOrdersTotal"/>
         </classes>
     </test>
 </suite>

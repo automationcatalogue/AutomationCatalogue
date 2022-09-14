@@ -1,5 +1,6 @@
 package orangehrm;
 
+import com.github.javafaker.Faker;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -67,9 +68,9 @@ public class TC_05_RecruitmentCandidate {
         driver.findElement(By.xpath("//form[@id='frmAddCandidate']/div[1]/div[1]/div[1]")).submit();
         System.out.println("Candidate Resume is uploaded");
 
-
-        String firstName="Ravi";
-        String lastName="BCDE";
+        Faker datafaker=new Faker();
+        String firstName=datafaker.name().firstName();
+        String lastName=datafaker.name().lastName();
         String completeName=firstName+" "+lastName;
         driver.findElement(By.xpath("//input[@id='addCandidate_firstName']")).sendKeys(firstName);
         System.out.println("Candidate FirstName is entered");
@@ -77,7 +78,7 @@ public class TC_05_RecruitmentCandidate {
         driver.findElement(By.xpath("//input[@id='addCandidate_lastName']")).sendKeys(lastName);
         System.out.println("Candidate LastName is entered");
 
-        driver.findElement(By.xpath("//input[@id='addCandidate_email']")).sendKeys("ravikiran@gmail.com");
+        driver.findElement(By.xpath("//input[@id='addCandidate_email']")).sendKeys(""+firstName+""+lastName+""+"@gmail.com");
         System.out.println("Email is entered");
 
         driver.findElement(By.xpath("//input[@id='addCandidate_linkedin']")).sendKeys("https://www.linkedin.com/in/ravi-c-1b35b1124/");

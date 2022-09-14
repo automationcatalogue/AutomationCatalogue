@@ -12,7 +12,7 @@ import utilities.*;
 import java.time.Duration;
 import java.util.List;
 
-public class TC_01_PurchaseCOD {
+public class TC_06_PurchaseCOD {
     static WebDriver driver;
     @BeforeClass
     public void beforePurchaseCOD()throws Exception{
