@@ -21,6 +21,8 @@ public class TC_01_AddEmployee {
     static WebDriver driver;
     public static String browserName;
     public static String yamlPath;
+    public static int iRowNumber;
+    public static String sExcelPath;
 
     @BeforeClass
     public void beforeAddEmployee() throws Exception{
@@ -35,12 +37,21 @@ public class TC_01_AddEmployee {
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddEmployee");
     }
 
     @Test
     public void addEmployee() throws Exception{
 
-        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"AddEmployee");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"AddEmployee");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
 
         //Login verification
         boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -57,17 +68,26 @@ public class TC_01_AddEmployee {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
         driver.findElement(By.xpath("//i[text()='add']")).click();
         System.out.println("click action performed on Add Employee");
+
         Faker datafaker = new Faker();
+
         //Add Employee
         String firstName=datafaker.name().firstName();
         String lastName=datafaker.name().lastName();
         driver.findElement(By.xpath("//input[@id='first-name-box']")).sendKeys(firstName);
-        System.out.println("FirstName is entered");
+        System.out.println("FirstName is entered as "+firstName);
+        ExcelUtils.setCellData(firstName,iRowNumber, Constant.sFirstName,"AddEmployee",sExcelPath);
+        System.out.println(firstName+" as FirstName is written back to the Excel sheet");
+
         driver.findElement(By.xpath("//input[@id='last-name-box']")).sendKeys(lastName);
-        System.out.println("LastName is entered");
+        System.out.println("LastName is entered as "+lastName);
+        ExcelUtils.setCellData(lastName,iRowNumber,Constant.sLastName, "AddEmployee", sExcelPath);
+        System.out.println(lastName+" as LastName is written back to the Excel sheet");
+
         driver.findElement(By.xpath("//i[text()='arrow_drop_down']")).click();
         System.out.println("Drop-down for location is clicked");
-        String explocation="India Office";
+        String explocation=ExcelUtils.getCellData(iRowNumber,Constant.sLocation,"AddEmployee");
+        System.out.println("Location from the Excel sheet is :"+explocation);
         By locator_Locations = By.xpath("//label[text()='Location']//following-sibling::div//ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_Locations, explocation);
 
@@ -75,7 +95,8 @@ public class TC_01_AddEmployee {
         System.out.println("click action performed on next button");
 
         //Personal Details
-        String dob="17-March-1986";
+        String dob=ExcelUtils.getCellData(iRowNumber, Constant.sDOB,"AddEmployee");
+        System.out.println("DOB from the Excel sheet is :"+dob);
         String expectedYear=dob.split("-")[2];
         String expectedMonth=dob.split("-")[1];
         String expectedDate=dob.split("-")[0];
@@ -121,14 +142,15 @@ public class TC_01_AddEmployee {
         js.executeScript("arguments[0].scrollIntoView(true);",element_RegionDropDown);
         element_RegionDropDown.click();
         System.out.println("Region drop-down is clicked");
-        String expectedRegion="Region-2";
+        String expectedRegion=ExcelUtils.getCellData(iRowNumber,Constant.sRegion,"AddEmployee");
+        System.out.println("Region from the Excel sheet is :"+expectedRegion);
         By locator_Regions = By.xpath("//label[text()='Region']//following-sibling::div[1]/div//ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_Regions, expectedRegion);
 
         WebElement element_FTEDropDown=driver.findElement(By.xpath("//label[text()='FTE']//following-sibling::div[1]/button/div/div/div"));
         element_FTEDropDown.click();
         System.out.println("FTE drop-down is clicked");
-        String expectedFTE="0.75";
+        String expectedFTE=ExcelUtils.getCellData(iRowNumber, Constant.sFTE, "AddEmployee");
         By locator_ftes = By.xpath("//label[text()='FTE']//following-sibling::div[1]/div//ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_ftes, expectedFTE);
 
@@ -136,7 +158,8 @@ public class TC_01_AddEmployee {
         WebElement element_TemporaryDepartmentDropDown=driver.findElement(By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/button/div/div/div"));
         element_TemporaryDepartmentDropDown.click();
         System.out.println("Temporary Department drop-down is clicked");
-        String expectedTemporaryDepartment="Sub unit-3";
+        String expectedTemporaryDepartment=ExcelUtils.getCellData(iRowNumber, Constant.sTemporaryDepartment,"AddEmployee");
+        System.out.println("Temporary Department from the Excel sheet is :"+expectedTemporaryDepartment);
         By locator_TemporaryDepartments = By.xpath("//label[text()='Temporary Department']//following-sibling::div[1]/div//ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_TemporaryDepartments, expectedTemporaryDepartment);
 
@@ -193,7 +216,9 @@ public class TC_01_AddEmployee {
         for(int iCount=1;iCount<=3;iCount++){
             try{
                 String employeeId=driver.findElement(By.xpath("//table[@id='employeeListTable']//tbody/tr[1]/td[2]")).getText();
-                System.out.println("EmployeeId is :"+employeeId);
+                ExcelUtils.setCellData(employeeId,iRowNumber, Constant.sEmployeeId_AddEmployee,"AddEmployee",sExcelPath);
+                System.out.println("EmployeeId written back to the Excel sheet is:"+employeeId);
+
                 break;
             }catch (StaleElementReferenceException se){
                 Thread.sleep(1000);
