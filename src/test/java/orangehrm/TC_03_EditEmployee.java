@@ -17,10 +17,11 @@ import java.util.Random;
 import java.util.function.Function;
 
 public class TC_03_EditEmployee {
-
     static WebDriver driver;
     public static String browserName;
     public static String yamlPath;
+    public static String sExcelPath;
+    public static int iRowNumber;
     @BeforeClass
     public void beforeEditEmployee() throws Exception{
         String path=System.getProperty("user.dir");
@@ -34,13 +35,20 @@ public class TC_03_EditEmployee {
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
     }
     @Test
     public  void editEmployee() throws Exception {
-
-
         //OrangeHRM Login
-        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"EditEmployee");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"EditEmployee");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -77,6 +85,8 @@ public class TC_03_EditEmployee {
         }
         String employeeId = al_EmployeeIds.get(randomNumber);
         System.out.println("Randomly selected employeeId is :"+employeeId);
+        ExcelUtils.setCellData(employeeId,iRowNumber,Constant.sEditEmployee_EmployeeId,"EditEmployee",sExcelPath);
+        System.out.println(employeeId+"Is written back to the Excel sheet");
 
         driver.findElement(By.xpath("//table[@id='employeeListTable']//td[text()='"+employeeId+"']//following-sibling::td[1]")).click();
         System.out.println("Clicked on Employee Name of the Employee Id :"+employeeId);
@@ -88,6 +98,8 @@ public class TC_03_EditEmployee {
         String newLastname = datafaker.name().lastName();
         driver.findElement(By.xpath("//input[@id='lastName']")).sendKeys(newLastname);
         System.out.println(newLastname + " is entered as new Last name");
+        ExcelUtils.setCellData(newLastname,iRowNumber,Constant.sEditEmployee_NewLastName,"EditEmployee",sExcelPath);
+        System.out.println(newLastname+"Is written back to the EditEmployee sheet");
 
         //Updating Marital Status if Marital Status is Single
         String maritalStatus = driver.findElement(By.xpath("//div[@id='emp_marital_status_inputfileddiv']/div/input")).getAttribute("value");
@@ -102,7 +114,8 @@ public class TC_03_EditEmployee {
         //Updating Nationality
         driver.findElement(By.xpath("//div[@id='nation_code_inputfileddiv']/div/input")).click();
         System.out.println("Nationality drop-down is clicked");
-        String expectedNationality = "Indonesian";
+        String expectedNationality = ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_Nationality,"EditEmployee");
+        System.out.println(expectedNationality+"is selected from the EditEmployee sheer");
         By locator_Nationalities=By.xpath("//div[@id='nation_code_inputfileddiv']/div/ul/li/span");
         Utils.selectDropdown_withoutSelectTag(locator_Nationalities,expectedNationality);
 
@@ -116,7 +129,8 @@ public class TC_03_EditEmployee {
         //Update the Location information
         driver.findElement(By.xpath("//label[@for='location_id']/../div/button")).click();
         System.out.println("Click action performed on Location drop down");
-        String expectedLocation="Jamaica training center";
+        String expectedLocation=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_Location,"EditEmployee");
+        System.out.println(expectedLocation+"is selected from the EditEmployee sheet");
         By locator_locations=By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_locations,expectedLocation);
 
@@ -126,7 +140,8 @@ public class TC_03_EditEmployee {
         //Updating the Event information
         driver.findElement(By.xpath("//label[text()='Event']//following-sibling::div[1]/button")).click();
         System.out.println("Event drop-down is clicked");
-        String expectedEvent="First Time Addition";
+        String expectedEvent=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_JobEventInformation,"EditEmployee");
+        System.out.println(expectedEvent+"is selected from the EditEmployee sheet");
         By locator_events=By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_events,expectedEvent);
 
@@ -143,9 +158,11 @@ public class TC_03_EditEmployee {
         System.out.println(CostToCompany + " : is Cost to Company");
 
         //Change the Cost of Living Allowance to 9000.00
+        String livingAllowance=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_LivingAllowance,"EditEmployee");
+        System.out.println(livingAllowance+"is selected from the EditEmployee sheet");
         driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[2]//input")).clear();
-        driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[2]//input")).sendKeys("9000.00");
-        System.out.println("Updated the Cost of Living Allowance is 9000.00");
+        driver.findElement(By.xpath("//span[text()='Cost of Living Allowance']/../../td[2]//input")).sendKeys(livingAllowance);
+        System.out.println("Updated the Cost of Living Allowance "+livingAllowance);
 
         //And Validate the GrossPay  --> It should be sum of Annual Basic Pay + Car Allowance + Cost of Living Allowance + Monthly
         String annualBasicPay=driver.findElement(By.xpath("//span[text()='Annual Basic Payment']/../../td[3]/span")).getText();
@@ -217,9 +234,11 @@ public class TC_03_EditEmployee {
         }
 
         //Change the EPF to 9%
+        String EPF=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_EPF,"EditEmployee");
+        System.out.println(EPF+"is selected from the EditEmployee sheet");
         driver.findElement(By.xpath("//span[text()='EPF']/../../td[2]//div/input")).clear();
         driver.findElement(By.xpath("//span[text()='EPF']/../../td[2]//div/input")).sendKeys("9.00");
-        System.out.println("EPF updated to 9.00%");
+        System.out.println("EPF updated to "+EPF);
 
 
         //Validate the EPF value --> It should be Annual Basic Pay * EPF%
@@ -279,9 +298,10 @@ public class TC_03_EditEmployee {
         driver.findElement(By.xpath("//label[text()='Event']//following-sibling::div[1]/button")).click();
         System.out.println("Event drop-down is clicked");
 
-        expectedEvent="First Time Addition";
+        String expectedSalaryEvent=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_SalaryEventInformation,"EditEmployee");
+        System.out.println(expectedSalaryEvent+"is selected from the EditEmployee sheet");
         By locator_Events=By.xpath("//label[text()='Event']//following-sibling::div[1]/div/div/ul/li/a/span");
-        Utils.selectDropdown_withoutSelectTag(locator_Events,expectedEvent);
+        Utils.selectDropdown_withoutSelectTag(locator_Events,expectedSalaryEvent);
 
         driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
         System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
@@ -292,8 +312,10 @@ public class TC_03_EditEmployee {
         driver.findElement(By.xpath("//a[contains(text(),'Contact Details')]")).click();
         System.out.println("Cliked on Contact Details in the More drop down");
         //Enter the MobileNumber
+        String mobileNumer=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_MobileNumber,"EditEmployee");
+        System.out.println(mobileNumer+"is selected from the EditEmployee sheet");
         driver.findElement(By.xpath("//input[@id='emp_mobile']")).clear();
-        driver.findElement(By.xpath("//input[@id='emp_mobile']")).sendKeys("90876536363");
+        driver.findElement(By.xpath("//input[@id='emp_mobile']")).sendKeys(mobileNumer);
         System.out.println("Mobile number changed ");
         driver.findElement(By.xpath("//button[text()='Save']")).click();
         System.out.println("Clicked on save button");

@@ -14,6 +14,8 @@ import java.util.List;
 
 public class TC_06_PurchaseCOD {
     static WebDriver driver;
+    public static String sExcelPath;
+    public static int iRowNumber;
     @BeforeClass
     public void beforePurchaseCOD()throws Exception{
         String path=System.getProperty("user.dir");
@@ -25,15 +27,24 @@ public class TC_06_PurchaseCOD {
         driver= Utils.launchBrowser(browserName);
 
         new BaseClass(driver);
-
         String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
         DriverUtils.loadURL(url);
+
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
     }
     @Test
     public void purchaseCOD() throws Exception {
 
         //Demo WebShop Login
-        CommonMethods_demoWebShop.login_DemoWebShop("aarosagarch@gmail.com","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"PurchaseCOD");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"PurchaseCOD");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
+
 
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
 

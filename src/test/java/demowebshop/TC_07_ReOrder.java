@@ -8,6 +8,8 @@ import utilities.*;
 
 public class TC_07_ReOrder {
     static WebDriver driver;
+    public static String sExcelPath;
+    public static int iRowNumber;
     @Test
     public  void reOrder() throws Exception {
         String path=System.getProperty("user.dir");
@@ -19,12 +21,20 @@ public class TC_07_ReOrder {
         driver= Utils.launchBrowser(browserName);
 
         new BaseClass(driver);
-
         String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
         DriverUtils.loadURL(url);
 
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
+
         //DemoWebShop Login
-        CommonMethods_demoWebShop.login_DemoWebShop("aarosagarch@gmail.com","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"ReOrderCOD");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"ReOrderCOD");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
 
         //Clicks on Orders and perform Reorder
         driver.findElement(By.xpath("//a[text()='aarosagarch@gmail.com']")).click();
