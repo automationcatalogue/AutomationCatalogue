@@ -22,6 +22,9 @@ public class TC_02_AddUser {
     static WebDriver driver;
     public static String browserName;
     public static String yamlPath;
+    public static String sExcelPath;
+    public static int iRowNumber;
+
     @BeforeClass
     public void beforeAddUser() throws Exception{
         String path=System.getProperty("user.dir");
@@ -35,11 +38,20 @@ public class TC_02_AddUser {
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
     }
     @Test
     public void adduser() throws Exception {
         //OrangeHRM Login
-        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"AddUser");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"AddUser");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
 
         //Login verification
         boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -75,6 +87,8 @@ public class TC_02_AddUser {
         }
         String employeeId = al_EmployeeIds.get(randomNumber);
         System.out.println("Randomly selected employeeId is :"+employeeId);
+        ExcelUtils.setCellData(employeeId,iRowNumber,Constant.sEmployeeId_AddEmployee,"Adduser", sExcelPath);
+        System.out.println("EmployeeId is written back to the Excel sheet :"+employeeId);
 
         driver.findElement(By.xpath("(//span[text()='HR Administration'])[1]")).click();
         System.out.println("HR Administration link is clicked");
@@ -85,7 +99,7 @@ public class TC_02_AddUser {
         System.out.println(" + Add user icon clicked ");
 
         //Add User
-        driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys("1061");
+        driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(employeeId);
         System.out.println("Employee ID is entered as EmployeeName");
         Thread.sleep(2000);
         driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(Keys.TAB);
@@ -95,17 +109,22 @@ public class TC_02_AddUser {
         driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(userName);
         System.out.println("User Name is entered");
 
-        driver.findElement(By.xpath("//input[@placeholder='Enter Password']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is Entered as Password in Password field");
-        driver.findElement(By.xpath("//input[@placeholder='Confirm Password']")).sendKeys("Admin@123");
-        System.out.println("Admin@123 is entered as Confirm Password");
+        String sChangePassword = ExcelUtils.getCellData(iRowNumber, Constant.sAddUser_ChangePassword,"AddUser");
+        System.out.println("Change Password from the Excel Sheet is :"+sChangePassword);
+        driver.findElement(By.xpath("//input[@placeholder='Enter Password']")).sendKeys(sChangePassword);
+        System.out.println(sChangePassword+" is Entered as Password in Password field");
+        String sConfirmChangePassword = ExcelUtils.getCellData(iRowNumber, Constant.sAddUser_ConfirmChangePassword,"Adduser");
+        System.out.println("Confirm Change Password from the Excel Sheet is :"+sChangePassword);
+        driver.findElement(By.xpath("//input[@placeholder='Confirm Password']")).sendKeys(sConfirmChangePassword);
+        System.out.println(sConfirmChangePassword+" is entered as Confirm Password");
 
-        driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
+        WebElement element_SaveBtn=driver.findElement(By.xpath("//button[@id='modal-save-button']"));
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("arguments[0].click();",element_SaveBtn);
         System.out.println("clicked on save button to create User");
 
         Thread.sleep(4000);
 
-        JavascriptExecutor js = (JavascriptExecutor)driver;
         WebElement element_filter=driver.findElement(By.xpath("//i[text()='oxd_filter']"));
         js.executeScript("arguments[0].click()",element_filter);
         System.out.println("clicked on Ohrm filter in the users menu");
@@ -158,7 +177,7 @@ public class TC_02_AddUser {
 
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys(userName);
         System.out.println(userName+" is entered as username");
-        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys("Admin@123");
+        driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys(sChangePassword);
         System.out.println("Admin@123 is entered as password");
 
         driver.findElement(By.xpath("//button[text()='Login']")).click();
