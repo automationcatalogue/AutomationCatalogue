@@ -25,10 +25,10 @@ public class ExcelUtils {
         }
     }
 
-    public static String getCellData(int iRowNumber, int iCoumnNumber, String sSheetName){
+    public static String getCellData(int iRowNumber, int iColumnNumber, String sSheetName){
         excelSheet=excelWBook.getSheet(sSheetName);
         try{
-            String sCellData = excelSheet.getRow(iRowNumber).getCell(iCoumnNumber).getStringCellValue();
+            String sCellData = excelSheet.getRow(iRowNumber).getCell(iColumnNumber).getStringCellValue();
             return sCellData;
         }catch (Exception e){
             System.out.println("Error in While reading the excel data...!!!");
@@ -57,6 +57,7 @@ public class ExcelUtils {
     }
 
     public static int getRowNumber(String sTestId, String sSheetName){
+        excelSheet=excelWBook.getSheet(sSheetName);
         int iRowSize=excelSheet.getLastRowNum();
         int iRowNumber =0;
         for(;iRowNumber<iRowSize;iRowNumber++){

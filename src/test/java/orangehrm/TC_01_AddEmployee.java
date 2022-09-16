@@ -26,6 +26,7 @@ public class TC_01_AddEmployee {
 
     @BeforeClass
     public void beforeAddEmployee() throws Exception{
+
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
