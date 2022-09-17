@@ -87,7 +87,7 @@ public class TC_02_AddUser {
         }
         String employeeId = al_EmployeeIds.get(randomNumber);
         System.out.println("Randomly selected employeeId is :"+employeeId);
-        ExcelUtils.setCellData(employeeId,iRowNumber,Constant.sEmployeeId_AddEmployee,"Adduser", sExcelPath);
+        ExcelUtils.setCellData(employeeId, iRowNumber, Constant.sEmployeeId_AddUser, "AddUser", sExcelPath);
         System.out.println("EmployeeId is written back to the Excel sheet :"+employeeId);
 
         driver.findElement(By.xpath("(//span[text()='HR Administration'])[1]")).click();
@@ -107,6 +107,7 @@ public class TC_02_AddUser {
         Faker datafaker = new Faker();
         String userName=datafaker.name().username();
         driver.findElement(By.xpath("//input[@id='user_name']")).sendKeys(userName);
+        ExcelUtils.setCellData(userName,iRowNumber,Constant.sAddUser_UserName,"AddUser",sExcelPath);
         System.out.println("User Name is entered");
 
         String sChangePassword = ExcelUtils.getCellData(iRowNumber, Constant.sAddUser_ChangePassword,"AddUser");

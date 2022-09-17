@@ -12,6 +12,8 @@ import java.util.Set;
 
 public class TC_08_AllOrdersTotal {
     static WebDriver driver;
+    public static String sExcelPath;
+    public static int iRowNumber;
     @Test
     public void allOrdersTotal() throws Exception {
         String path=System.getProperty("user.dir");
@@ -22,14 +24,23 @@ public class TC_08_AllOrdersTotal {
         String browserName= YamlUtils.getYamlData(yamlPath,"browser");
         driver= Utils.launchBrowser(browserName);
 
-
         new BaseClass(driver);
-
         String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
         DriverUtils.loadURL(url);
 
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
+
         //DemoWebShop Login
-        CommonMethods_demoWebShop.login_DemoWebShop("aarosagarch@gmail.com","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"AllOrdersTotal");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"AllOrdersTotal");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
+
+        //OrderTotal
 
         driver.findElement(By.xpath("//a[text()='aarosagarch@gmail.com']")).click();
         System.out.println("Click action is performed on Email ");

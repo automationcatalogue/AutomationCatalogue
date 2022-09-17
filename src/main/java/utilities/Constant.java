@@ -26,5 +26,32 @@ public class Constant {
     public static final int sAddUser_ChangePassword = 7;
     public static final int sAddUser_ConfirmChangePassword = 8;
 
+    //Edit Employee
+    public static final int sEditEmployee_EmployeeId=5;
+    public static final int sEditEmployee_NewLastName=6;
+    public static final int sEditEmployee_Nationality=7;
+    public static final int sEditEmployee_Location=8;
+    public static final int sEditEmployee_JobEventInformation=9;
+    public static final int sEditEmployee_LivingAllowance=10;
+    public static final int sEditEmployee_EPF=11;
+    public static final int sEditEmployee_SalaryEventInformation=12;
+    public static final int sEditEmployee_MobileNumber=13;
+
+    //Apply Leave
+    public static final int sApplyLeave_LeaveType=5;
+    public static final int sApplyLeave_LeaveFromDate=6;
+    public static final int sApplyLeave_LeaveToDate=7;
+
+    //Recruitment Candidate
+    public static final int sRecruitmentCandidate_FirstName=5;
+    public static final int sRecruitmentCandidate_LastName=6;
+    public static final int sRecruitmentCandidate_LinkedInUrl=7;
+    public static final int sRecruitmentCandidate_Vacancy=8;
+    public static final int sRecruitmentCandidate_RecruitmentStage=9;
+    public static final int sRecruitmentCandidate_StageChanges=10;
+
+    //Demo Web Shop
+    public static final int sDemoWebShop_LoginEmail=3;
+    public static final int sDemoWebShop_Password=4;
 
 }

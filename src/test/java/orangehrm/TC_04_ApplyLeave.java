@@ -15,6 +15,8 @@ public class TC_04_ApplyLeave {
     static WebDriver driver;
     public static String browserName;
     public static String yamlPath;
+    public static int iRowNumber;
+    public static String sExcelPath;
     @BeforeClass
     public void beforeApplyLeave() throws Exception{
         String path=System.getProperty("user.dir");
@@ -28,11 +30,20 @@ public class TC_04_ApplyLeave {
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
+
+        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddEmployee");
     }
     @Test
     public void applyLeave() throws Exception{
         //OrangeHRM Login
-        CommonMethods_OrangeHRM.login_OrangeHRM("Admin","Admin@123");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"ApplyLeave");
+        System.out.println("UserName from the Excel Sheet is :"+sUserName);
+        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"ApplyLeave");
+        System.out.println("Password from the Excel Sheet is :"+sPassword);
+        CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -55,13 +66,14 @@ public class TC_04_ApplyLeave {
         driver.findElement(By.xpath("//div[@id='leaveType_inputfileddiv']/div/input")).click();
         System.out.println("Click action is performed on Leave Type");
         Thread.sleep(1000);
-        String expectedLeaveType="Sick Leave - US";
+        String expectedLeaveType=ExcelUtils.getCellData(iRowNumber,Constant.sApplyLeave_LeaveType,"ApplyLeave");
         By locator_leaveTypes=By.xpath("//div[@id='leaveType_inputfileddiv']/div/ul/li");
         Utils.selectDropdown_withoutSelectTag(locator_leaveTypes,expectedLeaveType);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Check Leave Balance']")));
 
         //leave from Date
-        String from_date="11-June-2022";
+        String from_date=ExcelUtils.getCellData(iRowNumber,Constant.sApplyLeave_LeaveFromDate,"ApplyLeave");
+        System.out.println(from_date+"Is selected as from date");
         String fd_expectedYear=from_date.split("-")[2];
         String fd_expectedMonth=from_date.split("-")[1];
         String fd_expectedDate=from_date.split("-")[0];
@@ -98,10 +110,11 @@ public class TC_04_ApplyLeave {
         Thread.sleep(2000);
 
         //leave to Date
-        String to_dob="16-June-2022";
-        String to_expectedYear=to_dob.split("-")[2];
-        String to_expectedMonth=to_dob.split("-")[1];
-        String to_expectedDate=to_dob.split("-")[0];
+        String to_Date=ExcelUtils.getCellData(iRowNumber,Constant.sApplyLeave_LeaveToDate,"ApplyLeave");
+        System.out.println(to_Date+" Is selected as to date");
+        String to_expectedYear=to_Date.split("-")[2];
+        String to_expectedMonth=to_Date.split("-")[1];
+        String to_expectedDate=to_Date.split("-")[0];
 
         driver.findElement(By.xpath("(//i[text()='date_range'])[2]")).click();
         System.out.println("Click action is performed on to date menu");
