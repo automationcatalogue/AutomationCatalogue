@@ -2,6 +2,8 @@ package demowebshop;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
@@ -10,8 +12,11 @@ public class TC_07_ReOrder {
     static WebDriver driver;
     public static String sExcelPath;
     public static int iRowNumber;
+
+    @Parameters("testId")
     @Test
-    public  void reOrder() throws Exception {
+    public  void reOrder(@Optional(Constant.testId) String testId) throws Exception {
+        System.out.println("TestId for the ReOrder testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
@@ -24,10 +29,9 @@ public class TC_07_ReOrder {
         String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
         DriverUtils.loadURL(url);
 
-        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
+        iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
 
         //DemoWebShop Login
         String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"ReOrderCOD");

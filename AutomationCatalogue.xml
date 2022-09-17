@@ -1,18 +1,57 @@
 <suite name="Automation Catalogue TestCases execution" verbose="1" >
-    <test name="OrangeHRM testcases" >
+    <test name="OrangeHRM AddEmployee testcase" >
+        <parameter name="testId"  value="TC_01_01"/>
         <classes>
             <class name="orangehrm.TC_01_AddEmployee" />
-            <class name="orangehrm.TC_02_AddUser" />
-            <class name="orangehrm.TC_03_EditEmployee"/>
-            <class name="orangehrm.TC_04_ApplyLeave"/>
-            <class name="orangehrm.TC_05_RecruitmentCandidate"/>
         </classes>
     </test>
-    <test name="DemoWebshop testcases">
+
+    <test name="OrangeHRM AddUser testcase" >
+        <parameter name="testId"  value="TC_02_02"/>
         <classes>
-            <class name="demowebshop.TC_06_PurchaseCOD"/>
+            <class name="orangehrm.TC_02_AddUser" />
+        </classes>
+    </test>
+
+    <test name="OrangeHRM EditEmployee testcase" >
+        <parameter name="testId"  value="TC_03_03"/>
+        <classes>
+            <class name="orangehrm.TC_03_EditEmployee" />
+        </classes>
+    </test>
+
+    <test name="OrangeHRM ApplyLeave testcase" >
+        <parameter name="testId"  value="TC_04_04"/>
+        <classes>
+            <class name="orangehrm.TC_04_ApplyLeave" />
+        </classes>
+    </test>
+
+    <test name="OrangeHRM Add User testcase" >
+        <parameter name="testId"  value="TC_05_05"/>
+        <classes>
+            <class name="orangehrm.TC_05_RecruitmentCandidate" />
+        </classes>
+    </test>
+
+    <test name="DemoWebshop PurchaseCOD testcase">
+        <parameter name="testId"  value="TC_06_01"/>
+        <classes>
+            <class name="demowebshop.TC_06_PurchaseCOD" />
+        </classes>
+    </test>
+
+    <test name="DemoWebshop ReOrder testcase">
+        <parameter name="testId"  value="TC_07_02"/>
+        <classes>
             <class name="demowebshop.TC_07_ReOrder" />
-            <class name="demowebshop.TC_08_AllOrdersTotal"/>
+        </classes>
+    </test>
+
+    <test name="DemoWebshop AllOrdersTotal testcase">
+        <parameter name="testId"  value="TC_08_03"/>
+        <classes>
+            <class name="demowebshop.TC_08_AllOrdersTotal" />
         </classes>
     </test>
 </suite>

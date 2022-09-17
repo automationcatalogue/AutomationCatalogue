@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
@@ -25,8 +27,10 @@ public class TC_02_AddUser {
     public static String sExcelPath;
     public static int iRowNumber;
 
+    @Parameters("testId")
     @BeforeClass
-    public void beforeAddUser() throws Exception{
+    public void beforeAddUser(@Optional(Constant.testId) String testId) throws Exception{
+        System.out.println("TestId for the AddUser testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
@@ -39,10 +43,9 @@ public class TC_02_AddUser {
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
 
-        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
+        iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
     }
     @Test
     public void adduser() throws Exception {

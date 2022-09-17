@@ -4,6 +4,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
@@ -17,8 +19,11 @@ public class TC_04_ApplyLeave {
     public static String yamlPath;
     public static int iRowNumber;
     public static String sExcelPath;
+
+    @Parameters("testId")
     @BeforeClass
-    public void beforeApplyLeave() throws Exception{
+    public void beforeApplyLeave(@Optional(Constant.testId) String testId) throws Exception{
+        System.out.println("TestId for the ApplyLeave testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
@@ -31,10 +36,9 @@ public class TC_04_ApplyLeave {
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
 
-        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddEmployee");
+        iRowNumber = ExcelUtils.getRowNumber(testId,"AddEmployee");
     }
     @Test
     public void applyLeave() throws Exception{
@@ -73,12 +77,14 @@ public class TC_04_ApplyLeave {
 
         //leave from Date
         String from_date=ExcelUtils.getCellData(iRowNumber,Constant.sApplyLeave_LeaveFromDate,"ApplyLeave");
-        System.out.println(from_date+"Is selected as from date");
+        System.out.println(from_date+" is selected as from date");
         String fd_expectedYear=from_date.split("-")[2];
         String fd_expectedMonth=from_date.split("-")[1];
         String fd_expectedDate=from_date.split("-")[0];
 
-        driver.findElement(By.xpath("(//i[text()='date_range'])[1]")).click();
+        WebElement element_FromDate = driver.findElement(By.xpath("(//i[text()='date_range'])[1]"));
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("arguments[0].click();",element_FromDate);
         System.out.println("Click action is performed on From date menu");
         Thread.sleep(2000);
         driver.findElement(By.xpath("(//div[@class='select-wrapper picker__select--year'])[1]")).click();
@@ -127,7 +133,7 @@ public class TC_04_ApplyLeave {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-wrapper picker__select--month']/input")));
 
         WebElement element_ToDate_Month=driver.findElement(By.xpath("//div[@class='select-wrapper picker__select--month']/input"));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+
         js.executeScript("arguments[0].click();",element_ToDate_Month);
         System.out.println("Month drop-down is clicked");
         By locator_tdMonths= By.xpath("//div[@class='select-wrapper picker__select--month']/ul/li");

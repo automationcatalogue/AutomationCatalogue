@@ -1,6 +1,9 @@
 package utilities;
 
 public class Constant {
+
+    public static final String testId="TC_01_02";
+
     //General
     public static final int sno=0;
     public static final int sTestId=1;

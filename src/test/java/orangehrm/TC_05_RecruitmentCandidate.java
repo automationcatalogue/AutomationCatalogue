@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
@@ -21,8 +23,11 @@ public class TC_05_RecruitmentCandidate {
     public static String yamlPath;
     public static String sExcelPath;
     public static int iRowNumber;
+
+    @Parameters("testId")
     @BeforeClass
-    public void beforeRecruitmentCandidate() throws Exception{
+    public void beforeRecruitmentCandidate(@Optional(Constant.testId) String testId) throws Exception{
+        System.out.println("TestId for the RecruitmentCandidate testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
 
@@ -34,16 +39,16 @@ public class TC_05_RecruitmentCandidate {
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
-        String sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
+
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(sTestId, "AddUser");
+        iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
 
     }
     @Test
     public void recruitmentCandidate() throws Exception{
         //OrangeHRM Login
-        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"AddUserRecruitmentCandidate");
+        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"RecruitmentCandidate");
         System.out.println("UserName from the Excel Sheet is :"+sUserName);
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"RecruitmentCandidate");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
@@ -61,8 +66,11 @@ public class TC_05_RecruitmentCandidate {
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
 
         //Recruitment(ATS)
-        driver.findElement(By.xpath("//a[@id='side-menu-more']/span")).click();
-        System.out.println("More link is clicked");
+        WebElement element_More = driver.findElement(By.xpath("//a[@id='side-menu-more']/span"));
+        if(element_More.isDisplayed()){
+            element_More.click();
+            System.out.println("More Link is displayed and it is clicked");
+        }
         driver.findElement(By.xpath("(//span[text()='Recruitment (ATS)'])[1]")).click();
         System.out.println("Recuritment(ATS) link is clicked");
 
