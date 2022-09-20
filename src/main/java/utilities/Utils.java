@@ -1,16 +1,19 @@
 package utilities;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.opera.OperaDriver;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Utils {
@@ -71,5 +74,24 @@ public class Utils {
                 break;
             }
         }
+    }
+
+    public static String createScreenshotsFolder(String path){
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH-mm-ss");
+        String timestamp = dateFormat.format(date);
+        String screenshotPath = path+"\\screenshots\\"+timestamp;
+        new File(screenshotPath).mkdir();
+        System.out.println("Screenshots folder is created with the timestamp :"+timestamp);
+        return screenshotPath;
+    }
+
+    public static void captureScreenshot(String timestamp, String screenshotName) throws Exception{
+        TakesScreenshot takesScreenshot = (TakesScreenshot)driver;
+        File src = takesScreenshot.getScreenshotAs(OutputType.FILE);
+        String screenshotPath = timestamp+"\\"+screenshotName+".jpg";
+        File dest = new File(screenshotPath);
+        FileUtils.copyFile(src, dest);
+        System.out.println(screenshotName+ " Screenshot is captured");
     }
 }

@@ -1,6 +1,7 @@
 package testcases;
 
 import org.testng.annotations.BeforeSuite;
+import utilities.Utils;
 import utilities.YamlUtils;
 
 public class TestConfig {
@@ -17,6 +18,5 @@ public class TestConfig {
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
 
         sTestId = YamlUtils.getYamlData(yamlPath,"TestId");
-
     }
 }

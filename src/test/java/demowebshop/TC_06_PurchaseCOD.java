@@ -21,14 +21,17 @@ public class TC_06_PurchaseCOD {
     static WebDriver driver;
     public static String sExcelPath;
     public static int iRowNumber;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @BeforeClass
-    public void beforePurchaseCOD(@Optional(Constant.testId) String testId)throws Exception{
+    public void beforePurchaseCOD(@Optional(Constant.testId) String testId) throws Exception{
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the PurchaseCOD testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
-
+        screenshotPath = Utils.createScreenshotsFolder(path);
         String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
 
         String browserName= YamlUtils.getYamlData(yamlPath,"browser");
@@ -51,34 +54,7 @@ public class TC_06_PurchaseCOD {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"PurchaseCOD");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
-
-        //Taking Screenshot and saving in folder
-        String path=System.getProperty("user.dir");
-        String scrFolder = path +"\\screenshots\\"+ new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(
-                Calendar.getInstance().getTime()).toString();
-        new File(scrFolder).mkdir();
-        System.setProperty("scr.folder",scrFolder);
-        scrFolder=System.getProperty("scr.folder");
-        File scrFile = ((TakesScreenshot) driver)
-                .getScreenshotAs(OutputType.FILE);
-        //copy screenshot to screenshot folder
-        FileUtils.copyFile(
-                scrFile,
-                new File(scrFolder
-                        + "/screenshot"
-                        + new SimpleDateFormat("HHmmss").format(
-                        Calendar.getInstance().getTime()).toString()
-                        + ".png"));
-
-       /* String imageName=System.currentTimeMillis()+".png";
-        File destination= new File(path+"\\src\\main\\java\\individual.miscellaneous\\selenium_IndividualScripts\\javaPrograms\\screenshots\\"+imageName);
-        File scrFile=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(scrFile,destination);
-
-        /*TakesScreenshot ts=(TakesScreenshot)driver;
-        File src=ts.getScreenshotAs(OutputType.FILE);
-        File destination= new File(path+"\\src\\main\\java\\individual.miscellaneous\\selenium_IndividualScripts\\javaPrograms\\screenshots\\dws.jpg");
-        FileUtils.copyFile(src,destination); */
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_DemoWebShopLogin");
         System.out.println("DemoWebShop Screenshot is captured");
 
 
@@ -91,17 +67,16 @@ public class TC_06_PurchaseCOD {
         System.out.println("Click action is performed on Search button");
         driver.findElement(By.xpath("//input[@value='Add to cart']")).click();
         System.out.println("Click action is performed on Add to Cart");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_AddToCart");
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Shopping cart']")));
         WebElement element_CartBtn=driver.findElement(By.xpath("//span[text()='Shopping cart']"));
         JavascriptExecutor js = (JavascriptExecutor)driver;
         js.executeScript("arguments[0].click();",element_CartBtn);
-        //js.executeScript("arguments[0].scrollIntoView(true);",element_CartBtn);
-        //driver.findElement(By.xpath("//span[text()='Shopping cart']")).click();
         System.out.println("Click action is performed on the shopping cart ");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_shoppingCart");
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@name='termsofservice']")));
-
         driver.findElement(By.xpath("//input[@name='termsofservice']")).click();
         System.out.println("Click action performed on Terms of Service");
         driver.findElement(By.xpath("//button[@name='checkout']")).click();
@@ -118,6 +93,7 @@ public class TC_06_PurchaseCOD {
         System.out.println("Click action is performed on Continue for payment method");
         driver.findElement(By.xpath("//input[@class='button-1 payment-info-next-step-button']")).click();
         System.out.println("Click action is performed on Continue for Payment Information");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_Payment");
 
         List<WebElement> cartElements=driver.findElements(By.xpath ("//div[@class='cart-footer']/div[2]/div/table/tbody/tr/td[@class='cart-total-left']"));
         String shippingVal="Shipping: (Ground)",TotalVal="Total:";
@@ -137,6 +113,7 @@ public class TC_06_PurchaseCOD {
 
         String orderNumber=driver.findElement(By.xpath("//div[@class='section order-completed']/ul/li[1]")).getText();
         System.out.println(orderNumber);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_DemoWebShopOrder");
 
         CommonMethods_demoWebShop.logout_DemoWebShop();
 

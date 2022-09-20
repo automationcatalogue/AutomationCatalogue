@@ -79,7 +79,7 @@ public class RandomGenerator {
         return randomNumber;
     }
 
-    /*THIS WILL GENERATE RANDOM STRING  BETWEEN SPECIFIED RANGE
+    /*THIS WILL GENERATE RANDOM STRING  BETWEEN SPECIFIED RANGE/**
      * IT WILL CONTAIN ONLY NUMBER
      */
     public static String randomNumeric(int range){
