@@ -25,7 +25,7 @@ public class ExcelUtils {
         }
     }
 
-    public static String getCellData(int iRowNumber, int iColumnNumber, String sSheetName){
+    public static String getCellData(int iRowNumber, int iColumnNumber, String sSheetName) throws Exception{
         excelSheet=excelWBook.getSheet(sSheetName);
         try{
             String sCellData = excelSheet.getRow(iRowNumber).getCell(iColumnNumber).getStringCellValue();

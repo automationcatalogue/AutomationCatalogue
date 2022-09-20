@@ -15,23 +15,26 @@ public class TC_07_ReOrder {
 
     @Parameters("testId")
     @Test
-    public  void reOrder(@Optional(Constant.testId) String testId) throws Exception {
-        System.out.println("TestId for the ReOrder testcase is :"+testId);
-        String path=System.getProperty("user.dir");
-        System.out.println("Project Path is :"+path);
+    public  void beforeReOrder(@Optional(Constant.testId) String testId) throws Exception {
+        System.out.println("TestId for the ReOrder testcase is :" + testId);
+        String path = System.getProperty("user.dir");
+        System.out.println("Project Path is :" + path);
 
-        String yamlPath=path+"\\src\\main\\resources\\Config.yaml";
+        String yamlPath = path + "\\src\\main\\resources\\Config.yaml";
 
-        String browserName= YamlUtils.getYamlData(yamlPath,"browser");
-        driver= Utils.launchBrowser(browserName);
+        String browserName = YamlUtils.getYamlData(yamlPath, "browser");
+        driver = Utils.launchBrowser(browserName);
 
         new BaseClass(driver);
-        String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
+        String url = YamlUtils.getYamlData(yamlPath, "demoWebShopURL");
         DriverUtils.loadURL(url);
 
-        sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
-        ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
+        sExcelPath = path + "\\src\\main\\resources\\TestData.xlsx";
+        ExcelUtils.setExcelFile(path + "\\src\\main\\resources\\TestData.xlsx");
+        iRowNumber = ExcelUtils.getRowNumber(testId, "ReOrderCOD");
+    }
+    @Test
+    public void reOrder() throws Exception{
 
         //DemoWebShop Login
         String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"ReOrderCOD");
