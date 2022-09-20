@@ -1,6 +1,6 @@
 <suite name="Automation Catalogue TestCases execution" verbose="1" >
     <test name="OrangeHRM AddEmployee testcase" >
-        <parameter name="testId"  value="TC_01_01"/>
+        <parameter name="testId"  value="TC_01_04"/>
         <classes>
             <class name="orangehrm.TC_01_AddEmployee" />
         </classes>
@@ -49,7 +49,7 @@
     </test>
 
     <test name="DemoWebshop AllOrdersTotal testcase">
-        <parameter name="testId"  value="TC_08_03"/>
+        <parameter name="testId"  value="TC_08_05"/>
         <classes>
             <class name="demowebshop.TC_08_AllOrdersTotal" />
         </classes>

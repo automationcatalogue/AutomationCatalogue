@@ -68,7 +68,12 @@ public class TC_02_AddUser {
         driver.findElement(By.linkText("Employee List")).click();
         System.out.println("EmployeeList link is clicked");
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
+        try{
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
+        }catch(TimeoutException e){
+            driver.navigate().refresh();
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
+        }
 
         ArrayList<String> al_EmployeeIds = new ArrayList<String>();
         List<WebElement> elementList_EmployeeIds = driver.findElements(By.xpath("//table[@id='employeeListTable']/tbody/tr/td[2]"));
@@ -124,6 +129,8 @@ public class TC_02_AddUser {
 
         WebElement element_SaveBtn=driver.findElement(By.xpath("//button[@id='modal-save-button']"));
         JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("arguments[0].scrollIntoView(true);",element_SaveBtn);
+        Thread.sleep(1000);
         js.executeScript("arguments[0].click();",element_SaveBtn);
         System.out.println("clicked on save button to create User");
 

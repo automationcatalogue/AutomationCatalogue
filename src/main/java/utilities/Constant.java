@@ -2,7 +2,7 @@ package utilities;
 
 public class Constant {
 
-    public static final String testId="TC_01_02";
+    public static final String testId="TC_06_02";
 
     //General
     public static final int sno=0;

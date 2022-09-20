@@ -43,7 +43,8 @@ public class TC_03_EditEmployee {
 
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
+        iRowNumber = ExcelUtils.getRowNumber(testId, "EditEmployee");
+        System.out.println("Row Number for Edit Employee Testcase from Excel Sheet is :"+iRowNumber);
     }
     @Test
     public  void editEmployee() throws Exception {
@@ -92,7 +93,7 @@ public class TC_03_EditEmployee {
         ExcelUtils.setCellData(employeeId,iRowNumber,Constant.sEditEmployee_EmployeeId,"EditEmployee",sExcelPath);
         System.out.println(employeeId+"Is written back to the Excel sheet");
 
-        driver.findElement(By.xpath("//table[@id='employeeListTable']//td[text()='"+employeeId+"']//following-sibling::td[1]")).click();
+        driver.findElement(By.xpath("//table[@id='employeeListTable']//td[text()='0141']//following-sibling::td[1]")).click();
         System.out.println("Clicked on Employee Name of the Employee Id :"+employeeId);
 
         driver.findElement(By.xpath("//input[@id='lastName']")).clear();
@@ -103,7 +104,7 @@ public class TC_03_EditEmployee {
         driver.findElement(By.xpath("//input[@id='lastName']")).sendKeys(newLastname);
         System.out.println(newLastname + " is entered as new Last name");
         ExcelUtils.setCellData(newLastname,iRowNumber,Constant.sEditEmployee_NewLastName,"EditEmployee",sExcelPath);
-        System.out.println(newLastname+"Is written back to the EditEmployee sheet");
+        System.out.println(newLastname+" is written back to the EditEmployee sheet");
 
         //Updating Marital Status if Marital Status is Single
         String maritalStatus = driver.findElement(By.xpath("//div[@id='emp_marital_status_inputfileddiv']/div/input")).getAttribute("value");
@@ -134,7 +135,7 @@ public class TC_03_EditEmployee {
         driver.findElement(By.xpath("//label[@for='location_id']/../div/button")).click();
         System.out.println("Click action performed on Location drop down");
         String expectedLocation=ExcelUtils.getCellData(iRowNumber,Constant.sEditEmployee_Location,"EditEmployee");
-        System.out.println(expectedLocation+"is selected from the EditEmployee sheet");
+        System.out.println(expectedLocation+" is selected from the EditEmployee sheet");
         By locator_locations=By.xpath("//div[@class='dropdown-menu show']/div/ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_locations,expectedLocation);
 
@@ -157,7 +158,7 @@ public class TC_03_EditEmployee {
         System.out.println("Click action performed on Salary tab");
 
         //Read the Data for Cost to Company
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='summary-card-column summary-card-right'])[1]")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='summary-card-column summary-card-left'])[1]")));
         String CostToCompany=driver.findElement(By.xpath("(//div[@class='summary-card-column summary-card-right'])[1]")).getText();
         System.out.println(CostToCompany + " : is Cost to Company");
 
@@ -172,6 +173,9 @@ public class TC_03_EditEmployee {
         String annualBasicPay=driver.findElement(By.xpath("//span[text()='Annual Basic Payment']/../../td[3]/span")).getText();
         double dAnnualBasicPay=0.00;
         annualBasicPay=annualBasicPay.replaceAll(",","");
+        if(annualBasicPay.isEmpty()){
+            annualBasicPay ="5000.00";
+        }
         try{
             dAnnualBasicPay=Double.parseDouble(annualBasicPay);
         }catch(NumberFormatException ne){

@@ -1,8 +1,7 @@
 package demowebshop;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
@@ -11,7 +10,11 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Calendar;
 import java.util.List;
 
 public class TC_06_PurchaseCOD {
@@ -37,7 +40,7 @@ public class TC_06_PurchaseCOD {
 
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
-        iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
+        iRowNumber = ExcelUtils.getRowNumber(testId, "PurchaseCOD");
     }
     @Test
     public void purchaseCOD() throws Exception {
@@ -48,6 +51,35 @@ public class TC_06_PurchaseCOD {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"PurchaseCOD");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
+
+        //Taking Screenshot and saving in folder
+        String path=System.getProperty("user.dir");
+        String scrFolder = path +"\\screenshots\\"+ new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(
+                Calendar.getInstance().getTime()).toString();
+        new File(scrFolder).mkdir();
+        System.setProperty("scr.folder",scrFolder);
+        scrFolder=System.getProperty("scr.folder");
+        File scrFile = ((TakesScreenshot) driver)
+                .getScreenshotAs(OutputType.FILE);
+        //copy screenshot to screenshot folder
+        FileUtils.copyFile(
+                scrFile,
+                new File(scrFolder
+                        + "/screenshot"
+                        + new SimpleDateFormat("HHmmss").format(
+                        Calendar.getInstance().getTime()).toString()
+                        + ".png"));
+
+       /* String imageName=System.currentTimeMillis()+".png";
+        File destination= new File(path+"\\src\\main\\java\\individual.miscellaneous\\selenium_IndividualScripts\\javaPrograms\\screenshots\\"+imageName);
+        File scrFile=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(scrFile,destination);
+
+        /*TakesScreenshot ts=(TakesScreenshot)driver;
+        File src=ts.getScreenshotAs(OutputType.FILE);
+        File destination= new File(path+"\\src\\main\\java\\individual.miscellaneous\\selenium_IndividualScripts\\javaPrograms\\screenshots\\dws.jpg");
+        FileUtils.copyFile(src,destination); */
+        System.out.println("DemoWebShop Screenshot is captured");
 
 
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -61,8 +93,11 @@ public class TC_06_PurchaseCOD {
         System.out.println("Click action is performed on Add to Cart");
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Shopping cart']")));
-
-        driver.findElement(By.xpath("//span[text()='Shopping cart']")).click();
+        WebElement element_CartBtn=driver.findElement(By.xpath("//span[text()='Shopping cart']"));
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("arguments[0].click();",element_CartBtn);
+        //js.executeScript("arguments[0].scrollIntoView(true);",element_CartBtn);
+        //driver.findElement(By.xpath("//span[text()='Shopping cart']")).click();
         System.out.println("Click action is performed on the shopping cart ");
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@name='termsofservice']")));
