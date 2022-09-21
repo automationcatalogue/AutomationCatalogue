@@ -55,7 +55,7 @@ public class TC_06_PurchaseCOD {
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
         Utils.captureScreenshot(screenshotPath,testcaseName+"_DemoWebShopLogin");
-        System.out.println("DemoWebShop Screenshot is captured");
+        System.out.println("DemoWebShop login Screenshot is captured for : "+testcaseName);
 
 
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));

@@ -26,23 +26,23 @@ public class TC_02_AddUser {
     public static String yamlPath;
     public static String sExcelPath;
     public static int iRowNumber;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @BeforeClass
     public void beforeAddUser(@Optional(Constant.testId) String testId) throws Exception{
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the AddUser testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
-
+        screenshotPath = Utils.createScreenshotsFolder(path);
         yamlPath = path+"\\src\\main\\resources\\Config.yaml";
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
-
         driver= Utils.launchBrowser(browserName);
         new BaseClass(driver);
-
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
-
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
         iRowNumber = ExcelUtils.getRowNumber(testId, "AddUser");
@@ -55,6 +55,8 @@ public class TC_02_AddUser {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"AddUser");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_OrangeHRMLogin");
+        System.out.println("OrangeHRM login Screenshot is captured for : "+testcaseName);
 
         //Login verification
         boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -131,6 +133,7 @@ public class TC_02_AddUser {
         JavascriptExecutor js = (JavascriptExecutor)driver;
         js.executeScript("arguments[0].scrollIntoView(true);",element_SaveBtn);
         Thread.sleep(1000);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_AddUserPage");
         js.executeScript("arguments[0].click();",element_SaveBtn);
         System.out.println("clicked on save button to create User");
 
@@ -183,9 +186,7 @@ public class TC_02_AddUser {
 
         String employeeName=driver.findElement(By.xpath("//div[@id='systemUserDiv']//table//tbody/tr[1]/td[4]")).getText();
         System.out.println("Employee Name is :"+employeeName);
-
         driver.findElement(By.xpath("//span[text()='Log Out']")).click();
-
         driver.findElement(By.xpath("//input[@id='txtUsername']")).sendKeys(userName);
         System.out.println(userName+" is entered as username");
         driver.findElement(By.xpath("//input[@id='txtPassword']")).sendKeys(sChangePassword);
@@ -193,6 +194,8 @@ public class TC_02_AddUser {
 
         driver.findElement(By.xpath("//button[text()='Login']")).click();
         System.out.println("Click action is performed on login button with new user");
+
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_newUserLoginPage");
 
         String actualEmployeeName=driver.findElement(By.xpath("//div[@id='sidebar-profile-picture']/a")).getText();
         System.out.println(actualEmployeeName+ " is logged into the application");

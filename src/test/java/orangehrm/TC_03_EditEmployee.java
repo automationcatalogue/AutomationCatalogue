@@ -24,23 +24,23 @@ public class TC_03_EditEmployee {
     public static String yamlPath;
     public static String sExcelPath;
     public static int iRowNumber;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @BeforeClass
     public void beforeEditEmployee(@Optional(Constant.testId) String testId) throws Exception{
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the EditEmployee testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
-
+        screenshotPath = Utils.createScreenshotsFolder(path);
         yamlPath = path+"\\src\\main\\resources\\Config.yaml";
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
-
         driver= Utils.launchBrowser(browserName);
         new BaseClass(driver);
-
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
-
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
         iRowNumber = ExcelUtils.getRowNumber(testId, "EditEmployee");
@@ -54,6 +54,8 @@ public class TC_03_EditEmployee {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"EditEmployee");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_OrangeHRMLogin");
+        System.out.println("OrangeHRM login Screenshot is captured for : "+testcaseName);
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -63,13 +65,11 @@ public class TC_03_EditEmployee {
             System.out.println("Login is not successful");
             throw new Exception();
         }
-
+        //EmployeePage
         driver.findElement(By.linkText("Employee List")).click();
         System.out.println("click action performed on Employee List link");
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='employeeListTable']//tr[1]/td[2]")));
-
         ArrayList<String> al_EmployeeIds = new ArrayList<String>();
         List<WebElement> elementList_EmployeeIds = driver.findElements(By.xpath("//table[@id='employeeListTable']/tbody/tr/td[2]"));
         for(WebElement element_EmployeeId:elementList_EmployeeIds){
@@ -92,6 +92,7 @@ public class TC_03_EditEmployee {
         System.out.println("Randomly selected employeeId is :"+employeeId);
         ExcelUtils.setCellData(employeeId,iRowNumber,Constant.sEditEmployee_EmployeeId,"EditEmployee",sExcelPath);
         System.out.println(employeeId+"Is written back to the Excel sheet");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_EmployeePage");
 
         driver.findElement(By.xpath("//table[@id='employeeListTable']//td[text()='0141']//following-sibling::td[1]")).click();
         System.out.println("Clicked on Employee Name of the Employee Id :"+employeeId);
@@ -128,8 +129,10 @@ public class TC_03_EditEmployee {
         System.out.println("Click action is performed on save button");
 
         //Click on Job
+
         driver.findElement(By.xpath("//a[@ui-sref='pim.employees.profile.job']")).click();
         System.out.println("Click action performed on Job tab ");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_JobPage");
 
         //Update the Location information
         driver.findElement(By.xpath("//label[@for='location_id']/../div/button")).click();
@@ -156,6 +159,7 @@ public class TC_03_EditEmployee {
         //Click on Salary
         driver.findElement(By.xpath("//a[@ui-sref='pim.employees.profile.salary']")).click();
         System.out.println("Click action performed on Salary tab");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_SalaryPage");
 
         //Read the Data for Cost to Company
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='summary-card-column summary-card-left'])[1]")));
@@ -299,6 +303,7 @@ public class TC_03_EditEmployee {
         }
 
         //Click on Save button
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_UpdatedsalaryPage");
         driver.findElement(By.xpath("//a[text()='Save']")).click();
         System.out.println("Click action is performed on Save button");
 
@@ -315,6 +320,7 @@ public class TC_03_EditEmployee {
         System.out.println("Confirm button is clicked on Employment Details-Confirm changes window");
 
         //Click on Emergency Contacts
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_contactsPage");
         driver.findElement(By.xpath("//a[text()='More ']")).click();
         System.out.println("Clicked on More drop down");
         driver.findElement(By.xpath("//a[contains(text(),'Contact Details')]")).click();

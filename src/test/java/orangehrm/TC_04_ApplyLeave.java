@@ -1,5 +1,4 @@
 package orangehrm;
-
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -9,7 +8,6 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utilities.BaseClass;
 import utilities.*;
-
 import java.time.Duration;
 import java.util.List;
 
@@ -19,23 +17,23 @@ public class TC_04_ApplyLeave {
     public static String yamlPath;
     public static int iRowNumber;
     public static String sExcelPath;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @BeforeClass
     public void beforeApplyLeave(@Optional(Constant.testId) String testId) throws Exception{
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the ApplyLeave testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
-
+        screenshotPath = Utils.createScreenshotsFolder(path);
         yamlPath = path+"\\src\\main\\resources\\Config.yaml";
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
-
         driver= Utils.launchBrowser(browserName);
         new BaseClass(driver);
-
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
-
         sExcelPath = path+"\\src\\main\\resources\\TestData.xlsx";
         ExcelUtils.setExcelFile(path+"\\src\\main\\resources\\TestData.xlsx");
         iRowNumber = ExcelUtils.getRowNumber(testId,"AddEmployee");
@@ -48,6 +46,8 @@ public class TC_04_ApplyLeave {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"ApplyLeave");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_OrangeHRMLogin");
+        System.out.println("OrangeHRM login Screenshot is captured for : "+testcaseName);
 
         //Login verification
         boolean isLoginSuccessful = driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();

@@ -12,12 +12,16 @@ public class TC_07_ReOrder {
     static WebDriver driver;
     public static String sExcelPath;
     public static int iRowNumber;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @Test
     public  void beforeReOrder(@Optional(Constant.testId) String testId) throws Exception {
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the ReOrder testcase is :" + testId);
         String path = System.getProperty("user.dir");
+        screenshotPath = Utils.createScreenshotsFolder(path);
         System.out.println("Project Path is :" + path);
 
         String yamlPath = path + "\\src\\main\\resources\\Config.yaml";
@@ -42,6 +46,8 @@ public class TC_07_ReOrder {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"ReOrderCOD");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_DemoWebShopLogin");
+        System.out.println("DemoWebShop Login Screenshot is captured for "+testcaseName);
 
         //Clicks on Orders and perform Reorder
         driver.findElement(By.xpath("//a[text()='aarosagarch@gmail.com']")).click();
@@ -56,6 +62,7 @@ public class TC_07_ReOrder {
         System.out.println("Click action is performed on Terms of service Checkbox");
         driver.findElement(By.xpath("//button[@name='checkout']")).click();
         System.out.println("Click action is performed on Checkout button");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_CheckoutPage");
 
         driver.findElement(By.xpath("(//input[@title='Continue'])[1]")).click();
         System.out.println("Click action performed on Continue Button for billing address");
@@ -71,6 +78,7 @@ public class TC_07_ReOrder {
         System.out.println("Click action is performed on Continue for Payment Information");
         driver.findElement(By.xpath("//input[@class='button-1 confirm-order-next-step-button']")).click();
         System.out.println("Click action is performed on Confirm order");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_reOrder");
 
         String orderNumber=driver.findElement(By.xpath("//div[@class='section order-completed']/ul/li[1]")).getText();
         System.out.println(orderNumber);

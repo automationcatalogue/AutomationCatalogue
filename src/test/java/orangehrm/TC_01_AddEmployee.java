@@ -21,13 +21,17 @@ public class TC_01_AddEmployee {
     public static String yamlPath;
     public static int iRowNumber;
     public static String sExcelPath;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @BeforeClass
     public void beforeAddEmployee(@Optional(Constant.testId) String testId) throws Exception{
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the AddEmployee testcase is :"+testId);
         String path=System.getProperty("user.dir");
         System.out.println("Project Path is :"+path);
+        screenshotPath = Utils.createScreenshotsFolder(path);
 
         yamlPath = path+"\\src\\main\\resources\\Config.yaml";
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
@@ -51,6 +55,8 @@ public class TC_01_AddEmployee {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"AddEmployee");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_OrangeHRMLogin");
+        System.out.println("OrangeHRM login Screenshot is captured for : "+testcaseName);
 
         //Login verification
         boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
@@ -90,6 +96,7 @@ public class TC_01_AddEmployee {
         By locator_Locations = By.xpath("//label[text()='Location']//following-sibling::div//ul/li/a/span");
         Utils.selectDropdown_withoutSelectTag(locator_Locations, explocation);
 
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_EmployeePage");
         driver.findElement(By.xpath("//button[@id='modal-save-button']")).click();
         System.out.println("click action performed on next button");
 
@@ -133,6 +140,7 @@ public class TC_01_AddEmployee {
         JavascriptExecutor js=(JavascriptExecutor)driver;
         js.executeScript("arguments[0].scrollIntoView(true);", element_nextBtn);
         js.executeScript("arguments[0].click();", element_nextBtn);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_PersonalDetailsPage");
         System.out.println("Next button clicked in the Personal Details page");
 
         //Employment Details page
@@ -163,6 +171,7 @@ public class TC_01_AddEmployee {
         Utils.selectDropdown_withoutSelectTag(locator_TemporaryDepartments, expectedTemporaryDepartment);
 
         //PersonalDetails - last page
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_updatedPersonalDetails");
         driver.findElement(By.xpath("//button[text()='Save']")).click();
         System.out.println("save button is clicked");
 
@@ -188,6 +197,7 @@ public class TC_01_AddEmployee {
 
         driver.findElement(By.xpath("//div[@id='employee_name_quick_filter_employee_list_dropdown']//div[3]/span[1]")).click();
         System.out.println("First result is selected from a result drop-down");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_EmpVerificationPage");
 
         //driver.findElement(By.xpath("//i[text()='ohrm_search']")).click();
         //System.out.println("click action is performed on Search button");

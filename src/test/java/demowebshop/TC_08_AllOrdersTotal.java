@@ -17,13 +17,17 @@ public class TC_08_AllOrdersTotal {
     static WebDriver driver;
     public static String sExcelPath;
     public static int iRowNumber;
+    public static String screenshotPath;
+    public static String testcaseName;
 
     @Parameters("testId")
     @BeforeClass
     public void beforeAllOrdersTotal(@Optional(Constant.testId) String testId) throws Exception {
+        testcaseName=Thread.currentThread().getStackTrace()[1].getClassName().substring(Thread.currentThread().getStackTrace()[1].getClassName().indexOf('.')+1);
         System.out.println("TestId for the AllOrdersTotal testcase is :" + testId);
         String path = System.getProperty("user.dir");
         System.out.println("Project Path is :" + path);
+        screenshotPath = Utils.createScreenshotsFolder(path);
 
         String yamlPath = path + "\\src\\main\\resources\\Config.yaml";
 
@@ -46,16 +50,20 @@ public class TC_08_AllOrdersTotal {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"AllOrdersTotal");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
         CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_DemoWebShopLogin");
+        System.out.println("DemoWebShop Login Screenshot is captured for "+testcaseName);
 
         //OrderTotal
         driver.findElement(By.xpath("//a[text()='aarosagarch@gmail.com']")).click();
         System.out.println("Click action is performed on Email ");
         driver.findElement(By.xpath("(//a[text()='Orders'])[1]")).click();
         System.out.println("Click action is performed on Orders");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_ordersPage");
 
         double totalOrderValue = 0.00;
         List<WebElement> elements_allOrdersPrice = driver.findElements(By.xpath("//div[@class='page account-page order-list-page']//ul/li[3]"));
         System.out.println("Total Number of Orders placed :"+elements_allOrdersPrice.size());
+
 
         for(WebElement element_OrderValue:elements_allOrdersPrice){
             String orderValue = element_OrderValue.getText();
@@ -84,6 +92,7 @@ public class TC_08_AllOrdersTotal {
                 map_DaywiseOrders.put(orderDate,dOrderValue);
             }
         }
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_OrdersDayWise");
         //Printing sumOf Orders Daywise
         Set<Map.Entry<String, Double>> allEntries_Daywise =   map_DaywiseOrders.entrySet();
         for(Map.Entry<String, Double> eachEntry_Daywise:allEntries_Daywise){
