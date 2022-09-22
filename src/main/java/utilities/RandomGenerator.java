@@ -1,5 +1,6 @@
 package utilities;
 
+import com.github.javafaker.Faker;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Random;
@@ -105,5 +106,18 @@ public class RandomGenerator {
         String temp=RandomStringUtils.random(length, allowedChars);
         url=temp.substring(0, 3)+"."+temp.substring(4, temp.length()-3)+"."+temp.substring(temp.length()-2);
         return url;
+    }
+
+    public static String getRandomData(String typeOfData) throws Exception{
+        Faker datafaker = new Faker();
+        String data;
+        if(typeOfData.equalsIgnoreCase("firstName")){
+            data = datafaker.name().firstName();
+        }else if(typeOfData.equalsIgnoreCase("lastName")){
+            data = datafaker.name().lastName();
+        }else{
+            throw new Exception("Invalid type of Data");
+        }
+        return data;
     }
 }

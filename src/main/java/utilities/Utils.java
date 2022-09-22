@@ -94,4 +94,6 @@ public class Utils {
         FileUtils.copyFile(src, dest);
         System.out.println(screenshotName+ " Screenshot is captured");
     }
+
+
 }

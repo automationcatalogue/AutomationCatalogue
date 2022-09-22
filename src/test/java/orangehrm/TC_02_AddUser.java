@@ -11,6 +11,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import pages.OrangeHRM_HomePage;
+import pages.OrangeHRM_LoginPage;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -28,6 +30,8 @@ public class TC_02_AddUser {
     public static int iRowNumber;
     public static String screenshotPath;
     public static String testcaseName;
+    public OrangeHRM_LoginPage orangeHRM_loginPage;
+    private OrangeHRM_HomePage orangeHRM_homePage;
 
     @Parameters("testId")
     @BeforeClass
@@ -40,6 +44,8 @@ public class TC_02_AddUser {
         yamlPath = path+"\\src\\main\\resources\\Config.yaml";
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
         driver= Utils.launchBrowser(browserName);
+        orangeHRM_loginPage = new OrangeHRM_LoginPage(driver);
+        orangeHRM_homePage = new OrangeHRM_HomePage(driver);
         new BaseClass(driver);
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
@@ -49,23 +55,12 @@ public class TC_02_AddUser {
     }
     @Test
     public void adduser() throws Exception {
-        //OrangeHRM Login
-        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sUserName_OrangeHRM,"AddUser");
-        System.out.println("UserName from the Excel Sheet is :"+sUserName);
-        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"AddUser");
-        System.out.println("Password from the Excel Sheet is :"+sPassword);
-        CommonMethods_OrangeHRM.login_OrangeHRM(sUserName,sPassword);
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_OrangeHRMLogin");
-        System.out.println("OrangeHRM login Screenshot is captured for : "+testcaseName);
 
-        //Login verification
-        boolean isLoginSuccessful= driver.findElement(By.xpath("//i[@class='material-icons'][text()='oxd_home_menu']")).isDisplayed();
-        if(isLoginSuccessful){
-            System.out.println("Login is successful");
-        }else{
-            System.out.println("Login is not successful");
-            throw new Exception();
-        }
+        orangeHRM_loginPage.login_OrangeHRM(iRowNumber);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_1_OrangeHRMLogin");
+
+        orangeHRM_homePage.verifyLogin();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_2_OrangeHRMHomePage");
 
         driver.findElement(By.linkText("Employee List")).click();
         System.out.println("EmployeeList link is clicked");
@@ -207,7 +202,7 @@ public class TC_02_AddUser {
             throw new Exception();
         }
 
-        CommonMethods_OrangeHRM.logout_orangeHRM();
+        orangeHRM_loginPage.logout_orangeHRM();
 
         DriverUtils.closeBrowser();
 
