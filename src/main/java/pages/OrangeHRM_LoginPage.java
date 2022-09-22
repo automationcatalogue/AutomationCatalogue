@@ -2,6 +2,9 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import utilities.BaseClass;
 import utilities.Constant;
 import utilities.ExcelUtils;
@@ -14,6 +17,19 @@ public class OrangeHRM_LoginPage extends BaseClass {
         this.driver = driver;
     }
 
+    @FindBy(xpath = "//input[@id='txtUsername']")
+    WebElement element_UserName;
+
+    @FindBy(how = How.XPATH, using="//input[@id='txtPassword']")
+    WebElement element_Password;
+
+    @FindBy(xpath = "//button[@type='submit']")
+    WebElement element_login;
+
+    @FindBy(xpath = "//span[text()='Log Out']")
+    WebElement element_logout;
+
+
     /**
      * This method is used to Login into OrangeHRM
      * @param iRowNumber
@@ -25,11 +41,11 @@ public class OrangeHRM_LoginPage extends BaseClass {
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sUserPassword_OrangeHRM,"AddEmployee");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
 
-        getDriver().findElement(By.xpath("//input[@id='txtUsername']")).sendKeys(sUserName);
+        element_UserName.sendKeys(sUserName);
         System.out.println("Admin is entered as username");
-        getDriver().findElement(By.xpath("//input[@id='txtPassword']")).sendKeys(sPassword);
+        element_Password.sendKeys(sPassword);
         System.out.println("Admin@123 is Entered as password");
-        getDriver().findElement(By.xpath("//button[@type='submit']")).click();
+        element_login.click();
         System.out.println("Login button is clicked");
     }
 
@@ -39,7 +55,7 @@ public class OrangeHRM_LoginPage extends BaseClass {
      */
     public void logout_orangeHRM(){
         //OrangeHRM Logout
-        getDriver().findElement(By.xpath("//span[text()='Log Out']")).click();
+        element_logout.click();
         System.out.println("Logged out from the OrangeHRM application");
     }
 

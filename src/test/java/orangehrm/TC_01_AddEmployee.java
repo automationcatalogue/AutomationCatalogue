@@ -2,6 +2,7 @@ package orangehrm;
 
 import com.github.javafaker.Faker;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -48,7 +49,11 @@ public class TC_01_AddEmployee {
         driver= Utils.launchBrowser(browserName);
         new BaseClass(driver);
         orangeHRM_loginPage = new OrangeHRM_LoginPage(driver);
+        orangeHRM_loginPage = PageFactory.initElements(driver,OrangeHRM_LoginPage.class);
+
         orangeHRM_homePage = new OrangeHRM_HomePage(driver);
+        orangeHRM_homePage = PageFactory.initElements(driver,OrangeHRM_HomePage.class);
+
         orangeHRM_employeeListPage = new OrangeHRM_EmployeeListPage(driver);
         orangeHRM_addEmployeePage = new OrangeHRM_AddEmployeePage(driver);
 
