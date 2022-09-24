@@ -3,6 +3,7 @@ package orangehrm;
 import com.github.javafaker.Faker;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -46,6 +47,7 @@ public class TC_02_AddUser {
         driver= Utils.launchBrowser(browserName);
         orangeHRM_loginPage = new OrangeHRM_LoginPage(driver);
         orangeHRM_homePage = new OrangeHRM_HomePage(driver);
+        orangeHRM_homePage = PageFactory.initElements(driver,OrangeHRM_HomePage.class);
         new BaseClass(driver);
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);

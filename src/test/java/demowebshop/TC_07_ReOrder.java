@@ -2,9 +2,13 @@ package demowebshop;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import pages.DemoWebShop_LoginPage;
+import pages.DemoWebShop_OrdersPage;
+import pages.DemoWebShop_PaymentPage;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -14,6 +18,9 @@ public class TC_07_ReOrder {
     public static int iRowNumber;
     public static String screenshotPath;
     public static String testcaseName;
+    private DemoWebShop_LoginPage demoWebShop_loginPage;
+    private DemoWebShop_OrdersPage demoWebShop_ordersPage;
+    private DemoWebShop_PaymentPage demoWebShop_paymentPage;
 
     @Parameters("testId")
     @Test
@@ -28,6 +35,12 @@ public class TC_07_ReOrder {
 
         String browserName = YamlUtils.getYamlData(yamlPath, "browser");
         driver = Utils.launchBrowser(browserName);
+        demoWebShop_loginPage=new DemoWebShop_LoginPage(driver);
+        demoWebShop_loginPage= PageFactory.initElements(driver,DemoWebShop_LoginPage.class);
+        demoWebShop_ordersPage=new DemoWebShop_OrdersPage(driver);
+        demoWebShop_ordersPage=PageFactory.initElements(driver,DemoWebShop_OrdersPage.class);
+        demoWebShop_paymentPage=new DemoWebShop_PaymentPage(driver);
+        demoWebShop_paymentPage=PageFactory.initElements(driver,DemoWebShop_PaymentPage.class);
 
         new BaseClass(driver);
         String url = YamlUtils.getYamlData(yamlPath, "demoWebShopURL");
@@ -41,50 +54,19 @@ public class TC_07_ReOrder {
     public void reOrder() throws Exception{
 
         //DemoWebShop Login
-        String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"ReOrderCOD");
-        System.out.println("UserName from the Excel Sheet is :"+sUserName);
-        String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"ReOrderCOD");
-        System.out.println("Password from the Excel Sheet is :"+sPassword);
-        CommonMethods_demoWebShop.login_DemoWebShop(sUserName,sPassword);
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_DemoWebShopLogin");
+
+        demoWebShop_loginPage.login_DemoWebShop(iRowNumber);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_1_DemoWebShopLogin");
         System.out.println("DemoWebShop Login Screenshot is captured for "+testcaseName);
-
         //Clicks on Orders and perform Reorder
-        driver.findElement(By.xpath("//a[text()='aarosagarch@gmail.com']")).click();
-        System.out.println("Click action is performed on Email ");
-        driver.findElement(By.xpath("(//a[text()='Orders'])[1]")).click();
-        System.out.println("Click action is performed on Orders");
-        driver.findElement(By.xpath("(//div[@class='order-list']/div/div/strong/../../div[2])[1]")).click();
-        System.out.println("Click action is performed on Details button of first order");
-        driver.findElement(By.xpath("//input[@class='button-1 re-order-button']")).click();
-        System.out.println("Click action is performed on Reorder Button");
-        driver.findElement(By.xpath("//input[@id='termsofservice']")).click();
-        System.out.println("Click action is performed on Terms of service Checkbox");
-        driver.findElement(By.xpath("//button[@name='checkout']")).click();
-        System.out.println("Click action is performed on Checkout button");
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_CheckoutPage");
-
-        driver.findElement(By.xpath("(//input[@title='Continue'])[1]")).click();
-        System.out.println("Click action performed on Continue Button for billing address");
-        driver.findElement(By.xpath("(//input[@title='Continue'])[2]")).click();
-        System.out.println("Click action performed on Continue Button for shipping address");
-        driver.findElement(By.xpath("//input[@onclick='ShippingMethod.save()']")).click();
-        System.out.println("Click action performed on Continue Button for shipping method");
-        driver.findElement(By.xpath("//input[@id='paymentmethod_0']")).click();
-        System.out.println("Click action is performed on Cash On Delivery Radio Button");
-        driver.findElement(By.xpath("//input[@onclick='PaymentMethod.save()']")).click();
-        System.out.println("Click action is performed on Continue for payment method");
-        driver.findElement(By.xpath("//input[@class='button-1 payment-info-next-step-button']")).click();
-        System.out.println("Click action is performed on Continue for Payment Information");
-        driver.findElement(By.xpath("//input[@class='button-1 confirm-order-next-step-button']")).click();
-        System.out.println("Click action is performed on Confirm order");
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_reOrder");
-
-        String orderNumber=driver.findElement(By.xpath("//div[@class='section order-completed']/ul/li[1]")).getText();
-        System.out.println(orderNumber);
-
-        CommonMethods_demoWebShop.logout_DemoWebShop();
-
+        demoWebShop_ordersPage.ordersPage();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_2_allOrdersPage");
+        demoWebShop_ordersPage.reOrder();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_3_CheckoutPage");
+        //payment page
+        demoWebShop_paymentPage.orders_payments();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_4_reOrder");
+        demoWebShop_loginPage.logout_DemoWebShop();
         DriverUtils.closeBrowser();
 
     }

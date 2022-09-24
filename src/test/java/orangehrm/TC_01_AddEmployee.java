@@ -50,12 +50,12 @@ public class TC_01_AddEmployee {
         new BaseClass(driver);
         orangeHRM_loginPage = new OrangeHRM_LoginPage(driver);
         orangeHRM_loginPage = PageFactory.initElements(driver,OrangeHRM_LoginPage.class);
-
         orangeHRM_homePage = new OrangeHRM_HomePage(driver);
         orangeHRM_homePage = PageFactory.initElements(driver,OrangeHRM_HomePage.class);
-
         orangeHRM_employeeListPage = new OrangeHRM_EmployeeListPage(driver);
+        orangeHRM_employeeListPage=PageFactory.initElements(driver,OrangeHRM_EmployeeListPage.class);
         orangeHRM_addEmployeePage = new OrangeHRM_AddEmployeePage(driver);
+        orangeHRM_addEmployeePage=PageFactory.initElements(driver,OrangeHRM_AddEmployeePage.class);
 
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);

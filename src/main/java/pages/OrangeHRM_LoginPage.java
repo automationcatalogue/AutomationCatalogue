@@ -42,9 +42,9 @@ public class OrangeHRM_LoginPage extends BaseClass {
         System.out.println("Password from the Excel Sheet is :"+sPassword);
 
         element_UserName.sendKeys(sUserName);
-        System.out.println("Admin is entered as username");
+        System.out.println(sUserName+" is entered as username");
         element_Password.sendKeys(sPassword);
-        System.out.println("Admin@123 is Entered as password");
+        System.out.println(sPassword+" is Entered as password");
         element_login.click();
         System.out.println("Login button is clicked");
     }
