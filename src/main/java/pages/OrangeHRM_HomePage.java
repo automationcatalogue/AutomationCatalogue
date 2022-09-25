@@ -12,10 +12,14 @@ public class OrangeHRM_HomePage extends BaseClass {
     @FindBy(xpath = "//i[@class='material-icons'][text()='oxd_home_menu']")
     WebElement element_loginSuccess;
 
+    @FindBy(xpath = "(//span[text()='HR Administration'])[1]")
+    WebElement element_HRAdministration;
+
     public OrangeHRM_HomePage(WebDriver driver) {
         super(driver);
         this.driver = driver;
     }
+
     public void verifyLogin() throws Exception{
         boolean isLoginSuccessful= element_loginSuccess.isDisplayed();
         if(isLoginSuccessful){
@@ -24,5 +28,10 @@ public class OrangeHRM_HomePage extends BaseClass {
             System.out.println("Login is not successful");
             throw new Exception();
         }
+    }
+
+    public void clickHRAdministration(){
+        element_HRAdministration.click();
+        System.out.println("HR Administration link is clicked");
     }
 }

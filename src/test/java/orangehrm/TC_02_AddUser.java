@@ -12,8 +12,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import pages.OrangeHRM_HomePage;
-import pages.OrangeHRM_LoginPage;
+import pages.*;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -31,8 +30,10 @@ public class TC_02_AddUser {
     public static int iRowNumber;
     public static String screenshotPath;
     public static String testcaseName;
-    public OrangeHRM_LoginPage orangeHRM_loginPage;
+    private OrangeHRM_LoginPage orangeHRM_loginPage;
     private OrangeHRM_HomePage orangeHRM_homePage;
+    private OrangeHRM_EmployeeListPage orangeHRM_employeeListPage;
+    private OrangeHRM_UsersPage orangeHRM_usersPage;
 
     @Parameters("testId")
     @BeforeClass
@@ -45,9 +46,19 @@ public class TC_02_AddUser {
         yamlPath = path+"\\src\\main\\resources\\Config.yaml";
         browserName = YamlUtils.getYamlData(yamlPath,"browser");
         driver= Utils.launchBrowser(browserName);
+
         orangeHRM_loginPage = new OrangeHRM_LoginPage(driver);
+        orangeHRM_loginPage = PageFactory.initElements(driver, OrangeHRM_LoginPage.class);
+
         orangeHRM_homePage = new OrangeHRM_HomePage(driver);
         orangeHRM_homePage = PageFactory.initElements(driver,OrangeHRM_HomePage.class);
+
+        orangeHRM_employeeListPage = new OrangeHRM_EmployeeListPage(driver);
+        orangeHRM_employeeListPage = PageFactory.initElements(driver,OrangeHRM_EmployeeListPage.class);
+
+        orangeHRM_usersPage = new OrangeHRM_UsersPage(driver);
+        orangeHRM_usersPage = PageFactory.initElements(driver,OrangeHRM_UsersPage.class);
+
         new BaseClass(driver);
         String url = YamlUtils.getYamlData(yamlPath,"orangeHRMURL");
         DriverUtils.loadURL(url);
@@ -64,46 +75,11 @@ public class TC_02_AddUser {
         orangeHRM_homePage.verifyLogin();
         Utils.captureScreenshot(screenshotPath,testcaseName+"_2_OrangeHRMHomePage");
 
-        driver.findElement(By.linkText("Employee List")).click();
-        System.out.println("EmployeeList link is clicked");
-        WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
-        try{
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
-        }catch(TimeoutException e){
-            driver.navigate().refresh();
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
-        }
+        String employeeId = orangeHRM_employeeListPage.getRandomEmployeeId(iRowNumber, sExcelPath);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_3_OrangeHRM_EmployeeListData");
 
-        ArrayList<String> al_EmployeeIds = new ArrayList<String>();
-        List<WebElement> elementList_EmployeeIds = driver.findElements(By.xpath("//table[@id='employeeListTable']/tbody/tr/td[2]"));
-        for(WebElement element_EmployeeId:elementList_EmployeeIds){
-            String employeeId = element_EmployeeId.getText();
-            al_EmployeeIds.add(employeeId);
-        }
-
-        Random random = new Random();
-        int randomNumber;
-        while(true){
-            randomNumber=random.nextInt(51);
-            if(randomNumber==0){
-                continue;
-            }else{
-                System.out.println("Randomly generated number is :"+randomNumber);
-                break;
-            }
-        }
-        String employeeId = al_EmployeeIds.get(randomNumber);
-        System.out.println("Randomly selected employeeId is :"+employeeId);
-        ExcelUtils.setCellData(employeeId, iRowNumber, Constant.sEmployeeId_AddUser, "AddUser", sExcelPath);
-        System.out.println("EmployeeId is written back to the Excel sheet :"+employeeId);
-
-        driver.findElement(By.xpath("(//span[text()='HR Administration'])[1]")).click();
-        System.out.println("HR Administration link is clicked");
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='systemUserDiv']//table//tbody//tr[1]")));
-
-        driver.findElement(By.xpath("//i[text()='add']")).click();
-        System.out.println(" + Add user icon clicked ");
+        orangeHRM_usersPage.clickAddUser();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_4_OrangeHRM_Adduser");
 
         //Add User
         driver.findElement(By.xpath("//input[@id='selectedEmployee_value']")).sendKeys(employeeId);

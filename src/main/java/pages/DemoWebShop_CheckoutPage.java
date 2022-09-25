@@ -1,16 +1,17 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utilities.BaseClass;
+import utilities.Constant;
+import utilities.ExcelUtils;
 
 import java.util.List;
 
-public class DemoWebShop_PaymentPage extends BaseClass {
+public class DemoWebShop_CheckoutPage extends BaseClass {
     WebDriver driver;
-    public DemoWebShop_PaymentPage(WebDriver driver) {
+    public DemoWebShop_CheckoutPage(WebDriver driver) {
         super(driver);
         this.driver=driver;
     }
@@ -37,48 +38,47 @@ public class DemoWebShop_PaymentPage extends BaseClass {
     WebElement confirmOrderBtn;
     @FindBy(xpath = "//div[@class='section order-completed']/ul/li[1]")
     WebElement element_orderNumber;
-    public void orders_payments(){
-        //driver.findElement(By.xpath("(//input[@title='Continue'])[1]")).click();
+
+    public void placeOrder(int iRowNumber, String sSheetName, String sExcelPath) throws Exception{
+
         continueBtn_billing.click();
         System.out.println("Click action performed on Continue Button for billing address");
-        //driver.findElement(By.xpath("(//input[@title='Continue'])[2]")).click();
+
         continueBtn_shipping.click();
         System.out.println("Click action performed on Continue Button for shipping address");
-        //driver.findElement(By.xpath("//input[@onclick='ShippingMethod.save()']")).click();
+
         shipping_method.click();
         System.out.println("Click action performed on Continue Button for shipping method");
-        //driver.findElement(By.xpath("//input[@id='paymentmethod_0']")).click();
+
         cashOnDelivery_RadioBtn.click();
         System.out.println("Click action is performed on Cash On Delivery Radio Button");
-        //driver.findElement(By.xpath("//input[@onclick='PaymentMethod.save()']")).click();
+
         continueForPaymentMethod.click();
         System.out.println("Click action is performed on Continue for payment method");
-        //driver.findElement(By.xpath("//input[@class='button-1 payment-info-next-step-button']")).click();
+
         continueForPaymentInformation.click();
         System.out.println("Click action is performed on Continue for Payment Information");
 
-        //List<WebElement> cartElements=driver.findElements(By.xpath ("//div[@class='cart-footer']/div[2]/div/table/tbody/tr/td[@class='cart-total-left']"));
         List<WebElement> cartElements=allCartElements;
         String shippingVal="Shipping: (Ground)",TotalVal="Total:";
         for(WebElement cartEle:cartElements){
             if(cartEle.getText()==shippingVal){
-                //String ShippingPrice=driver.findElement(By.xpath("//div[@class='cart-footer']/div/div/table/tbody/tr[2]/td[2]")).getText();
+
                 String ShippingPrice=element_ShippingPrice.getText();
                 System.out.println("Shipping cost is :"+ ShippingPrice);
             }
             if(cartEle.getText()==TotalVal){
-                //String TotalPrice=driver.findElement(By.xpath("//div[@class='cart-footer']/div/div/table/tbody/tr[5]/td[2]")).getText();
                 String TotalPrice=element_totalPrice.getText();
                 System.out.println("Total price is :"+TotalPrice);
             }
         }
 
-        //driver.findElement(By.xpath("//input[@onclick='ConfirmOrder.save()']")).click();
         confirmOrderBtn.click();
         System.out.println("Click action is performed on Confirm Button for Confirm Order");
 
-        //String orderNumber=driver.findElement(By.xpath("//div[@class='section order-completed']/ul/li[1]")).getText();
-        String orderNumber=element_orderNumber.getText();
-        System.out.println(orderNumber);
+        String sOrderNumber=element_orderNumber.getText();
+        System.out.println(sOrderNumber);
+        ExcelUtils.setCellData(sOrderNumber, iRowNumber, Constant.sOrderNumber, sSheetName, sExcelPath);
+        System.out.println("Order Number :"+sOrderNumber+" is written back to the Excel Sheet");
     }
 }

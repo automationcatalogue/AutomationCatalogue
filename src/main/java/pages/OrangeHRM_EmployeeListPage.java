@@ -11,6 +11,9 @@ import utilities.Constant;
 import utilities.ExcelUtils;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 
 public class OrangeHRM_EmployeeListPage extends BaseClass {
@@ -24,24 +27,6 @@ public class OrangeHRM_EmployeeListPage extends BaseClass {
     WebElement employeeListLink;
     @FindBy(xpath = "//i[text()='add']")
     WebElement addBtn_employee;
-
-    public void clickAddEmployee(){
-        //driver.findElement(By.linkText("Employee List")).click();
-        employeeListLink.click();
-        System.out.println("EmployeeList link is clicked");
-        WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
-        try{
-            //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
-            wait.until(ExpectedConditions.elementToBeClickable(addBtn_employee));
-        }catch(TimeoutException e){
-            driver.navigate().refresh();
-            //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[text()='add']")));
-            wait.until(ExpectedConditions.elementToBeClickable(addBtn_employee));
-        }
-        //driver.findElement(By.xpath("//i[text()='add']")).click();
-        addBtn_employee.click();
-        System.out.println("click action performed on Add Employee");
-    }
     @FindBy(linkText = "Employee Management")
     WebElement employeeManagementLink;
     @FindBy(linkText = "Employee List")
@@ -58,6 +43,24 @@ public class OrangeHRM_EmployeeListPage extends BaseClass {
     WebElement actualEmployeeName_employeeListTable;
     @FindBy(xpath = "//table[@id='employeeListTable']//tbody/tr[1]/td[8]")
     WebElement actualLocation_employeeListTable;
+
+    public void loadEmployeeListData(){
+        employeeListLink.click();
+        System.out.println("EmployeeList link is clicked");
+        WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
+        try{
+            wait.until(ExpectedConditions.elementToBeClickable(addBtn_employee));
+        }catch(TimeoutException e){
+            driver.navigate().refresh();
+            wait.until(ExpectedConditions.elementToBeClickable(addBtn_employee));
+        }
+    }
+
+    public void clickAddEmployee(){
+        loadEmployeeListData();
+        addBtn_employee.click();
+        System.out.println("click action performed on Add Employee");
+    }
 
     public void verifyAddEmployeeData(int iRowNumber, String sExcelPath) throws Exception{
         WebDriverWait wait  = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -140,4 +143,33 @@ public class OrangeHRM_EmployeeListPage extends BaseClass {
 
         System.out.println("Add Employee is successful");
     }
+
+    public String getRandomEmployeeId(int iRowNumber, String sExcelPath) throws Exception{
+        loadEmployeeListData();
+        ArrayList<String> al_EmployeeIds = new ArrayList<String>();
+        List<WebElement> elementList_EmployeeIds = driver.findElements(By.xpath("//table[@id='employeeListTable']/tbody/tr/td[2]"));
+        for(WebElement element_EmployeeId:elementList_EmployeeIds){
+            String employeeId = element_EmployeeId.getText();
+            al_EmployeeIds.add(employeeId);
+        }
+
+        Random random = new Random();
+        int randomNumber;
+        while(true){
+            randomNumber=random.nextInt(51);
+            if(randomNumber==0){
+                continue;
+            }else{
+                System.out.println("Randomly generated number is :"+randomNumber);
+                break;
+            }
+        }
+        String employeeId = al_EmployeeIds.get(randomNumber);
+        System.out.println("Randomly selected employeeId is :"+employeeId);
+        ExcelUtils.setCellData(employeeId, iRowNumber, Constant.sEmployeeId_AddUser, "AddUser", sExcelPath);
+        System.out.println("EmployeeId is written back to the Excel sheet :"+employeeId);
+
+        return employeeId;
+    }
+
 }

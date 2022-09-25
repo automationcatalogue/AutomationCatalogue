@@ -18,9 +18,7 @@ public class DemoWebShop_LoginPage extends BaseClass {
         super(driver);
         this.driver=driver;
     }
-    @FindBy(xpath = "//a[text()='Log in']")
-    static
-    WebElement element_LogIn;
+
 
     @FindBy(how = How.XPATH, using="//input[@id='Email']")
     static
@@ -43,23 +41,19 @@ public class DemoWebShop_LoginPage extends BaseClass {
      * @param iRowNumber
      * @author anitha
      */
-    public static void login_DemoWebShop(int iRowNumber) throws Exception {
+    public void login_DemoWebShop(int iRowNumber) throws Exception {
         //DemoWebShop login
-
         String sUserName = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_LoginEmail,"PurchaseCOD");
         System.out.println("UserName from the Excel Sheet is :"+sUserName);
         String sPassword = ExcelUtils.getCellData(iRowNumber, Constant.sDemoWebShop_Password,"PurchaseCOD");
         System.out.println("Password from the Excel Sheet is :"+sPassword);
 
-        element_LogIn.click();
-        System.out.println("Click action is performed on the Login button");
-        //getDriver().findElement(By.xpath()).sendKeys(sUserName);
         element_Email.sendKeys(sUserName);
         System.out.println( sUserName+" is entered as Email");
-        //getDriver().findElement(By.xpath()).sendKeys(sPassword);
+
         element_Password.sendKeys(sPassword);
         System.out.println(sPassword+" is entered as password");
-        //getDriver().findElement(By.xpath()).click();
+
         element_submitLogin.click();
         System.out.println("Click action is performed on Login Button");
     }

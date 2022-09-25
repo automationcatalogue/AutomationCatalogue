@@ -1,6 +1,5 @@
 package demowebshop;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.Optional;
@@ -8,7 +7,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pages.DemoWebShop_LoginPage;
 import pages.DemoWebShop_OrdersPage;
-import pages.DemoWebShop_PaymentPage;
+import pages.DemoWebShop_CheckoutPage;
 import utilities.BaseClass;
 import utilities.*;
 
@@ -20,7 +19,7 @@ public class TC_07_ReOrder {
     public static String testcaseName;
     private DemoWebShop_LoginPage demoWebShop_loginPage;
     private DemoWebShop_OrdersPage demoWebShop_ordersPage;
-    private DemoWebShop_PaymentPage demoWebShop_paymentPage;
+    private DemoWebShop_CheckoutPage demoWebShop_checkoutPage;
 
     @Parameters("testId")
     @Test
@@ -39,8 +38,9 @@ public class TC_07_ReOrder {
         demoWebShop_loginPage= PageFactory.initElements(driver,DemoWebShop_LoginPage.class);
         demoWebShop_ordersPage=new DemoWebShop_OrdersPage(driver);
         demoWebShop_ordersPage=PageFactory.initElements(driver,DemoWebShop_OrdersPage.class);
-        demoWebShop_paymentPage=new DemoWebShop_PaymentPage(driver);
-        demoWebShop_paymentPage=PageFactory.initElements(driver,DemoWebShop_PaymentPage.class);
+
+        demoWebShop_checkoutPage=new DemoWebShop_CheckoutPage(driver);
+        demoWebShop_checkoutPage=PageFactory.initElements(driver, DemoWebShop_CheckoutPage.class);
 
         new BaseClass(driver);
         String url = YamlUtils.getYamlData(yamlPath, "demoWebShopURL");
@@ -53,19 +53,19 @@ public class TC_07_ReOrder {
     @Test
     public void reOrder() throws Exception{
 
-        //DemoWebShop Login
-
         demoWebShop_loginPage.login_DemoWebShop(iRowNumber);
         Utils.captureScreenshot(screenshotPath,testcaseName+"_1_DemoWebShopLogin");
         System.out.println("DemoWebShop Login Screenshot is captured for "+testcaseName);
-        //Clicks on Orders and perform Reorder
+
         demoWebShop_ordersPage.ordersPage();
         Utils.captureScreenshot(screenshotPath,testcaseName+"_2_allOrdersPage");
+
         demoWebShop_ordersPage.reOrder();
         Utils.captureScreenshot(screenshotPath,testcaseName+"_3_CheckoutPage");
-        //payment page
-        demoWebShop_paymentPage.orders_payments();
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_4_reOrder");
+
+        demoWebShop_checkoutPage.placeOrder(iRowNumber,"ReOrderCOD", sExcelPath);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_4_ReOrderConfirmation");
+
         demoWebShop_loginPage.logout_DemoWebShop();
         DriverUtils.closeBrowser();
 

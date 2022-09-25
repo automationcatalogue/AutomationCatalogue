@@ -1,6 +1,5 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,9 +9,9 @@ import utilities.BaseClass;
 
 import java.time.Duration;
 
-public class DemoWebShop_CartPage extends BaseClass {
+public class DemoWebShop_ShoppingCartPage extends BaseClass {
     WebDriver driver;
-    public DemoWebShop_CartPage(WebDriver driver) {
+    public DemoWebShop_ShoppingCartPage(WebDriver driver) {
         super(driver);
         this.driver=driver;
     }
@@ -20,14 +19,12 @@ public class DemoWebShop_CartPage extends BaseClass {
     WebElement termsOfService;
     @FindBy(xpath = "//button[@name='checkout']")
     WebElement checkoutBtn;
-    public void cartPage_checkout(){
+
+    public void clickCheckout(){
         WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(20));
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@name='termsofservice']")));
         wait.until(ExpectedConditions.elementToBeClickable(termsOfService));
-        //driver.findElement(By.xpath("//input[@name='termsofservice']")).click();
         termsOfService.click();
         System.out.println("Click action performed on Terms of Service");
-        //driver.findElement(By.xpath("//button[@name='checkout']")).click();
         checkoutBtn.click();
         System.out.println("Click action performed on Checkout Button");
     }

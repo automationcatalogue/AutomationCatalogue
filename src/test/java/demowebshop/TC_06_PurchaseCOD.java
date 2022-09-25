@@ -1,26 +1,11 @@
 package demowebshop;
 
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
-import pages.DemoWebShop_CartPage;
-import pages.DemoWebShop_HomePage;
-import pages.DemoWebShop_LoginPage;
-import pages.DemoWebShop_PaymentPage;
+import org.testng.annotations.*;
+import pages.*;
 import utilities.BaseClass;
 import utilities.*;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.Calendar;
-import java.util.List;
 
 public class TC_06_PurchaseCOD {
     static WebDriver driver;
@@ -30,8 +15,10 @@ public class TC_06_PurchaseCOD {
     public static String testcaseName;
     private DemoWebShop_LoginPage demoWebShop_loginPage;
     private DemoWebShop_HomePage demoWebShop_homePage;
-    private DemoWebShop_CartPage demoWebShop_cartPage;
-    private DemoWebShop_PaymentPage demoWebShop_paymentPage;
+    private DemoWebShop_ProductCataloguePage demoWebShop_productCataloguePage;
+    private DemoWebShop_ProductDisplayPage demoWebShop_productDisplayPage;
+    private DemoWebShop_ShoppingCartPage demoWebShop_shoppingCartPage;
+    private DemoWebShop_CheckoutPage demoWebShop_checkoutPage;
 
     @Parameters("testId")
     @BeforeClass
@@ -48,12 +35,21 @@ public class TC_06_PurchaseCOD {
 
         demoWebShop_loginPage=new DemoWebShop_LoginPage(driver);
         demoWebShop_loginPage= PageFactory.initElements(driver,DemoWebShop_LoginPage.class);
+
         demoWebShop_homePage=new DemoWebShop_HomePage(driver);
         demoWebShop_homePage=PageFactory.initElements(driver,DemoWebShop_HomePage.class);
-        demoWebShop_cartPage=new DemoWebShop_CartPage(driver);
-        demoWebShop_cartPage=PageFactory.initElements(driver,DemoWebShop_CartPage.class);
-        demoWebShop_paymentPage=new DemoWebShop_PaymentPage(driver);
-        demoWebShop_paymentPage=PageFactory.initElements(driver,DemoWebShop_PaymentPage.class);
+
+        demoWebShop_productCataloguePage = new DemoWebShop_ProductCataloguePage(driver);
+        demoWebShop_productCataloguePage = PageFactory.initElements(driver, DemoWebShop_ProductCataloguePage.class);
+
+        demoWebShop_productDisplayPage = new DemoWebShop_ProductDisplayPage(driver);
+        demoWebShop_productDisplayPage = PageFactory.initElements(driver, DemoWebShop_ProductDisplayPage.class);
+
+        demoWebShop_shoppingCartPage=new DemoWebShop_ShoppingCartPage(driver);
+        demoWebShop_shoppingCartPage=PageFactory.initElements(driver, DemoWebShop_ShoppingCartPage.class);
+
+        demoWebShop_checkoutPage=new DemoWebShop_CheckoutPage(driver);
+        demoWebShop_checkoutPage=PageFactory.initElements(driver, DemoWebShop_CheckoutPage.class);
 
         new BaseClass(driver);
         String url = YamlUtils.getYamlData(yamlPath,"demoWebShopURL");
@@ -65,24 +61,35 @@ public class TC_06_PurchaseCOD {
     }
     @Test
     public void purchaseCOD() throws Exception {
-        //Demo WebShop Login
+
+        demoWebShop_homePage.clickLoginLink();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_1_DemoWebShop_HomePage");
+
         demoWebShop_loginPage.login_DemoWebShop(iRowNumber);
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_1_DemoWebShopLogin");
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_2_DemoWebShop_HomePage");
 
-        //Selecting Blue Jeans and Add to Cart
-        demoWebShop_homePage.addToCart_DemoWebShop(screenshotPath,testcaseName);
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_2_shoppingCart");
+        demoWebShop_homePage.clickProductsLink();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_3_DemoWebShop_ProductPage");
 
-        //Cart page
-        demoWebShop_cartPage.cartPage_checkout();
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_3_Checkout");
+        demoWebShop_productCataloguePage.selectProduct();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_4_DemoWebShop_ProductCataloguePage");
 
-        //payment page
-        demoWebShop_paymentPage.orders_payments();
-        Utils.captureScreenshot(screenshotPath,testcaseName+"_4_Payment");
+        demoWebShop_productDisplayPage.clickAddToCart(screenshotPath, testcaseName);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_5_DemoWebShop_ProductDisplayPage");
+
+        demoWebShop_shoppingCartPage.clickCheckout();
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_6_DemoWebShop_ShoppingCartPage");
+
+        demoWebShop_checkoutPage.placeOrder(iRowNumber,"PurchaseCOD", sExcelPath);
+        Utils.captureScreenshot(screenshotPath,testcaseName+"_7_DemoWebShop_OrderConfirmationPage");
 
         demoWebShop_loginPage.logout_DemoWebShop();
         DriverUtils.closeBrowser();
 
+    }
+
+    @AfterClass
+    public void tearDown(){
+        DriverUtils.closeBrowser();
     }
 }

@@ -57,4 +57,7 @@ public class Constant {
     public static final int sDemoWebShop_LoginEmail=3;
     public static final int sDemoWebShop_Password=4;
 
+    //Purchase COD
+    public static final int sOrderNumber = 5;
+
 }
