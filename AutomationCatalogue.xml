@@ -1,38 +1,4 @@
 <suite name="Automation Catalogue TestCases execution" verbose="1" >
-    <test name="OrangeHRM AddEmployee testcase" >
-        <parameter name="testId"  value="TC_01_04"/>
-        <classes>
-            <class name="orangehrm.TC_01_AddEmployee" />
-        </classes>
-    </test>
-
-    <test name="OrangeHRM AddUser testcase" >
-        <parameter name="testId"  value="TC_02_02"/>
-        <classes>
-            <class name="orangehrm.TC_02_AddUser" />
-        </classes>
-    </test>
-
-    <test name="OrangeHRM EditEmployee testcase" >
-        <parameter name="testId"  value="TC_03_03"/>
-        <classes>
-            <class name="orangehrm.TC_03_EditEmployee" />
-        </classes>
-    </test>
-
-    <test name="OrangeHRM ApplyLeave testcase" >
-        <parameter name="testId"  value="TC_04_04"/>
-        <classes>
-            <class name="orangehrm.TC_04_ApplyLeave" />
-        </classes>
-    </test>
-
-    <test name="OrangeHRM Add User testcase" >
-        <parameter name="testId"  value="TC_05_05"/>
-        <classes>
-            <class name="orangehrm.TC_05_RecruitmentCandidate" />
-        </classes>
-    </test>
 
     <test name="DemoWebshop PurchaseCOD testcase">
         <parameter name="testId"  value="TC_06_01"/>
